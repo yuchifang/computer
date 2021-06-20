@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import KeyBoard from './KeyBoard.jsx'
+import KeyBoard from './KeyBoard'
 import Screen from './Screen'
 
 export default function Table() {
+    const [displayValue, setDisplayValue] = useState<string>()
     return (
         <WTableBlock>
-            <Screen />
-            <KeyBoard />
+            <Screen
+                displayValue={displayValue} />
+            <KeyBoard
+                setDisplayValue={setDisplayValue} />
         </WTableBlock>
     )
 }

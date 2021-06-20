@@ -1,51 +1,62 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
+import useDecimalControl from '../hooks/useDecimalControl'
 
-export default function KeyBoard() {
+export default function KeyBoard({ setDisplayValue }) {
+    // const decimalCount = useRef(0)// 紀錄按幾次數字 非小數點
+    const [total, setTotal] = useState(0)// 記錄所有數字
+    // const 
+    const handelClick = (e) => {
+        const inputString = e.target.innerHTML
+        const returnTotal = useDecimalControl({ inputString, total })
+        setTotal(returnTotal)
+        setDisplayValue(returnTotal)
+    }
+
     return (
         <WKeyBoard>
-            <WSevenClickBlock>
+            <WSevenClickBlock onClick={handelClick}>
                 7
             </WSevenClickBlock>
-            <WEightClickBlock>
+            <WEightClickBlock onClick={handelClick}>
                 8
             </WEightClickBlock>
-            <WNightClickBlock>
+            <WNightClickBlock onClick={handelClick}>
                 9
             </WNightClickBlock>
             <WDividedClickBlock>
                 ÷
             </WDividedClickBlock>
-            <WFourClickBlock>
+            <WFourClickBlock onClick={handelClick}>
                 4
             </WFourClickBlock>
-            <WFiveClickBlock>
+            <WFiveClickBlock onClick={handelClick}>
                 5
             </WFiveClickBlock>
-            <WSixClickBlock>
+            <WSixClickBlock onClick={handelClick}>
                 6
             </WSixClickBlock>
             <WMultiplyClickBlock>
                 ×
             </WMultiplyClickBlock>
-            <WOneClickBlock>
+            <WOneClickBlock onClick={handelClick}>
                 1
             </WOneClickBlock>
-            <WTwoClickBlock>
+            <WTwoClickBlock onClick={handelClick}>
                 2
             </WTwoClickBlock>
-            <WThreeClickBlock>
+            <WThreeClickBlock onClick={handelClick}>
                 3
             </WThreeClickBlock>
             <WPlusClickBlock>
                 +
             </WPlusClickBlock>
-            <WZeroClickBlock>
+            <WZeroClickBlock onClick={handelClick}>
                 0
             </WZeroClickBlock>
-            <WDoubleZeroClickBlock>
+            <WDoubleZeroClickBlock onClick={handelClick}>
                 00
             </WDoubleZeroClickBlock>
             <WPointClickBlock>
@@ -63,7 +74,7 @@ export default function KeyBoard() {
             <WEqualClickBlock>
                 =
             </WEqualClickBlock>
-        </WKeyBoard>
+        </WKeyBoard >
     )
 }
 

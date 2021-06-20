@@ -1,15 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import Table from './page/Table.jsx'
-import { MyContext } from './context/index'
+import Table from './page/Table'
 
 export default function App() {
     return (
-        <MyContext.Provider >
-            <WContainer>
-                <Table />
-            </WContainer>
-        </MyContext.Provider>
+        <WContainer>
+            <Table />
+        </WContainer>
     )
 }
 /*

@@ -1,14 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
-export default function Screen() {
+export default function Screen({ displayValue }) {
     return (
         <WScreen>
             <WDisplayScreen>
                 555
             </WDisplayScreen>
             <WCalculatorScreen>
-                666+12368
+                {displayValue}
             </WCalculatorScreen>
         </WScreen>
     )
@@ -19,7 +19,7 @@ const WScreen = styled.div`
     padding:8px 10px;
     display:grid;
     grid-template-columns: 100%;
-    grid-template-rows:20px auto;
+    grid-template-rows:22px auto;
     text-align:right;
 `
 
@@ -29,11 +29,12 @@ const WDisplayScreen = styled.span`
     border-radius: 5px 5px 0 0;
     background-color:${color.screenColor};
     display:inline-block;
-    font-size: 20px;
-    line-height: 20px;
-`
+    font-size: 19px;
+    line-height: 19px;
+    `
 
 const WCalculatorScreen = styled.span`
+    height:92px;
     background-color:${color.screenColor};
     display:inline-block;
     height:100%;

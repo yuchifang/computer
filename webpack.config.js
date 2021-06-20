@@ -13,7 +13,7 @@ module.exports = {
         path: path.resolve(__dirname, "dist")
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
     },
     devServer: {
         open: true,
@@ -22,6 +22,17 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: "babel-loader",
+                    options: {
+                        presets: ['@babel/typescript', '@babel/preset-react', '@babel/preset-env'],
+                        plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
+                    }
+                }
+            },
             {
                 test: /\.(m?js|jsx)$/,
                 exclude: /node_modules/,

@@ -10,25 +10,26 @@ export default function Table() {
             []//calculator array
         }
      */
-    const [calculatorValue, setCalculatorValue] = useState({
-        finalValue: 0,
+    const [screenState, setScreenState] = useState({
+        finalValue: 0,  // 表示計算完 的值 或初始值
         hasFinalValue: true,
         calculatorArray: [0]
     })
 
-    console.log({ calculatorValue })
+    console.log({ screenState })
     return (
         <WTableBlock>
             <Screen
-                calculatorValue={calculatorValue} />
+                screenState={screenState} />
             <KeyBoard
-                setCalculatorValue={setCalculatorValue}
-                calculatorValue={calculatorValue}
+                setScreenState={setScreenState}
+                screenState={screenState}
             />
         </WTableBlock>
     )
 }
-
+// 限制字數
+// 最後看看要怎麼處理 import 的打包
 const WTableBlock = styled.div`
     display:grid;
     grid-template-columns: 100%;

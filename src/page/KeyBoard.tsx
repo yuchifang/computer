@@ -2,9 +2,12 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
-import { decimalControl, markControl } from '../util'
+import { decimalControl, markControl, handleEqualAnswer } from '../util'
 
-export default function KeyBoard({ setCalculatorValue, calculatorValue: { calculatorArray, finalValue, hasFinalValue } }) {
+export default function KeyBoard({
+    setScreenState,
+    screenState: { calculatorArray, finalValue, hasFinalValue }
+}) {
 
     //小數點 
     //推 + - 
@@ -15,13 +18,13 @@ export default function KeyBoard({ setCalculatorValue, calculatorValue: { calcul
     const lastArrayString = calculatorArray.length > 0 ? calculatorArray[calculatorArray.length - 1] : ""
 
     //應改可以用 useRef 按符號清空
-    const [calcArray, setCalcArray] = useState()
+    // const [calcArray, setCalcArray] = useState()
     // const 
-    const handleClick = (e) => {
+    const handleNumberClick = (e) => {
         const inputString = e.target.innerHTML
 
-        if (hasFinalValue) {
-            setCalculatorValue(prevState => {
+        if (hasFinalValue) { // 處理是否計算完成的答案值,及初始值
+            setScreenState?.(prevState => {
                 return {
                     ...prevState,
                     finalValue: null,
@@ -34,8 +37,8 @@ export default function KeyBoard({ setCalculatorValue, calculatorValue: { calcul
         }
 
         const returnTotal = decimalControl({ inputString, lastArrayString })
-
-        setCalculatorValue(prevState => {
+        console.log("wwwwwwwwwwwww")
+        setScreenState?.(prevState => {
             let state = prevState.calculatorArray
             state.pop()
             return {
@@ -45,89 +48,113 @@ export default function KeyBoard({ setCalculatorValue, calculatorValue: { calcul
         })
     }
 
-    // 考慮是否要讓 初始值為0 
-    // 是 0
-    // 1. 第一次按數字 為按的數字
-    // 2. 第一次按+號為 0 + 某數
-
-
-
     const handlePunctuationClick = (e) => {
         const inputMarkString = e.target.innerHTML
         const controlString = markControl(inputMarkString, lastArrayString)
-        console.log({ controlString })
+
         if (controlString === "same") {
             return
         }
         if (controlString === "change") {
-            setCalculatorValue(prevState => {
+            setScreenState?.(prevState => {
                 let state = prevState.calculatorArray
                 state.pop()
                 return {
                     ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
                     calculatorArray: [...state, inputMarkString]
                 }
             })
             return
         }
 
-        setCalculatorValue(prevState => {
+        setScreenState?.(prevState => {
 
             return {
                 ...prevState,
+                finalValue: null,
+                hasFinalValue: false,
                 calculatorArray: [...prevState.calculatorArray, inputMarkString]
             }
         })
     }
 
+    const handleEqualClick = (e) => {
+        const inputEqualString = e.target.innerHTML
+        const answerString = handleEqualAnswer(calculatorArray)
+
+        // 把陣列處理完 在用單一陣列做顯示
+        // 顯示在display上
+        /*
+        // 1. 處理加減乘除在["3","+3"] 的情況
+        // 2. 看看算是會不會成立
+        //    不會成立情況有哪些原因
+              最後一個是符號
+              /0顯示 infinity
+
+        // 3. 先乘除後加減
+        // 4. 
+        */
+        setScreenState?.((prevState) => {
+            return {
+                ...prevState,
+                hasFinalValue: true,
+                calculatorArray: [answerString]
+            }
+        })
+        console.log(answerString)
+
+
+    }
 
 
 
     return (
         <WKeyBoard>
-            <WSevenClickBlock onClick={handleClick}>
+            <WSevenClickBlock onClick={handleNumberClick}>
                 7
             </WSevenClickBlock>
-            <WEightClickBlock onClick={handleClick}>
+            <WEightClickBlock onClick={handleNumberClick}>
                 8
             </WEightClickBlock>
-            <WNightClickBlock onClick={handleClick}>
+            <WNightClickBlock onClick={handleNumberClick}>
                 9
             </WNightClickBlock>
             <WDividedClickBlock >
                 ÷
             </WDividedClickBlock>
-            <WFourClickBlock onClick={handleClick}>
+            <WFourClickBlock onClick={handleNumberClick}>
                 4
             </WFourClickBlock>
-            <WFiveClickBlock onClick={handleClick}>
+            <WFiveClickBlock onClick={handleNumberClick}>
                 5
             </WFiveClickBlock>
-            <WSixClickBlock onClick={handleClick}>
+            <WSixClickBlock onClick={handleNumberClick}>
                 6
             </WSixClickBlock>
             <WMultiplyClickBlock>
                 ×
             </WMultiplyClickBlock>
-            <WOneClickBlock onClick={handleClick}>
+            <WOneClickBlock onClick={handleNumberClick}>
                 1
             </WOneClickBlock>
-            <WTwoClickBlock onClick={handleClick}>
+            <WTwoClickBlock onClick={handleNumberClick}>
                 2
             </WTwoClickBlock>
-            <WThreeClickBlock onClick={handleClick}>
+            <WThreeClickBlock onClick={handleNumberClick}>
                 3
             </WThreeClickBlock>
             <WPlusClickBlock onClick={handlePunctuationClick}>
                 +
             </WPlusClickBlock>
-            <WZeroClickBlock onClick={handleClick}>
+            <WZeroClickBlock onClick={handleNumberClick}>
                 0
             </WZeroClickBlock>
-            <WDoubleZeroClickBlock onClick={handleClick}>
+            <WDoubleZeroClickBlock onClick={handleNumberClick}>
                 00
             </WDoubleZeroClickBlock>
-            <WPointClickBlock onClick={handleClick}>
+            <WPointClickBlock onClick={handleNumberClick}>
                 .
             </WPointClickBlock>
             <WDecreaseClickBlock>
@@ -139,7 +166,7 @@ export default function KeyBoard({ setCalculatorValue, calculatorValue: { calcul
             <WDeleteNumberClickBlock>
                 ⌫
             </WDeleteNumberClickBlock>
-            <WEqualClickBlock>
+            <WEqualClickBlock onClick={handleEqualClick}>
                 =
             </WEqualClickBlock>
         </WKeyBoard >

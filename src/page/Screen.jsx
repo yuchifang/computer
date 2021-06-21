@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
-export default function Screen({ calculatorValue: { calculatorArray } }) {
+export default function Screen({ screenState: { calculatorArray } }) {
     console.log(calculatorArray)
     return (
         <WScreen>

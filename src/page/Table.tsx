@@ -4,7 +4,18 @@ import KeyBoard from './KeyBoard'
 import Screen from './Screen'
 
 export default function Table() {
-    const [calculatorValue, setCalculatorValue] = useState([0])
+    /*
+        {   
+            答案值  // 跟 等於值有關
+            []//calculator array
+        }
+     */
+    const [calculatorValue, setCalculatorValue] = useState({
+        finalValue: 0,
+        hasFinalValue: true,
+        calculatorArray: [0]
+    })
+
     console.log({ calculatorValue })
     return (
         <WTableBlock>

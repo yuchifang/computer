@@ -1,15 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
-export default function Screen({ calculatorValue }) {
-    console.log(calculatorValue)
+export default function Screen({ calculatorValue: { calculatorArray } }) {
+    console.log(calculatorArray)
     return (
         <WScreen>
             <WDisplayScreen>
                 555
             </WDisplayScreen>
             <WCalculatorScreen>
-                {calculatorValue}
+                {calculatorArray}
             </WCalculatorScreen>
         </WScreen>
     )

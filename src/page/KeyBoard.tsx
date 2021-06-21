@@ -4,24 +4,44 @@ import color from '../style/style'
 import Button from '../components/Button'
 import { decimalControl, markControl } from '../util'
 
-export default function KeyBoard({ setCalculatorValue, calculatorValue }) {
+export default function KeyBoard({ setCalculatorValue, calculatorValue: { calculatorArray, finalValue, hasFinalValue } }) {
 
     //小數點 
     //推 + - 
 
     // const [totalString, setTotalString] = useState<String>("")// 記錄所有數字 
-    const lastArrayString = calculatorValue.length > 0 ? calculatorValue[calculatorValue.length - 1] : ""
+
+    //這段程式碼 取最後的值做運算
+    const lastArrayString = calculatorArray.length > 0 ? calculatorArray[calculatorArray.length - 1] : ""
 
     //應改可以用 useRef 按符號清空
     const [calcArray, setCalcArray] = useState()
     // const 
     const handleClick = (e) => {
         const inputString = e.target.innerHTML
+
+        if (hasFinalValue) {
+            setCalculatorValue(prevState => {
+                return {
+                    ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
+                    calculatorArray: [inputString]
+                }
+            })
+
+            return
+        }
+
         const returnTotal = decimalControl({ inputString, lastArrayString })
+
         setCalculatorValue(prevState => {
-            let state = prevState
+            let state = prevState.calculatorArray
             state.pop()
-            return [...state, returnTotal]
+            return {
+                ...prevState,
+                calculatorArray: [...state, returnTotal]
+            }
         })
     }
 
@@ -41,14 +61,23 @@ export default function KeyBoard({ setCalculatorValue, calculatorValue }) {
         }
         if (controlString === "change") {
             setCalculatorValue(prevState => {
-                let state = prevState
+                let state = prevState.calculatorArray
                 state.pop()
-                return [...state, inputMarkString]
+                return {
+                    ...prevState,
+                    calculatorArray: [...state, inputMarkString]
+                }
             })
             return
         }
 
-        setCalculatorValue(prevState => [...prevState, inputMarkString])
+        setCalculatorValue(prevState => {
+
+            return {
+                ...prevState,
+                calculatorArray: [...prevState.calculatorArray, inputMarkString]
+            }
+        })
     }
 
 

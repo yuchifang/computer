@@ -4,13 +4,16 @@ import KeyBoard from './KeyBoard'
 import Screen from './Screen'
 
 export default function Table() {
-    const [displayValue, setDisplayValue] = useState<string>()
+    const [calculatorValue, setCalculatorValue] = useState([0])
+    console.log({ calculatorValue })
     return (
         <WTableBlock>
             <Screen
-                displayValue={displayValue} />
+                calculatorValue={calculatorValue} />
             <KeyBoard
-                setDisplayValue={setDisplayValue} />
+                setCalculatorValue={setCalculatorValue}
+                calculatorValue={calculatorValue}
+            />
         </WTableBlock>
     )
 }

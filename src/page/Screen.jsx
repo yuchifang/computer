@@ -1,14 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
-export default function Screen({ displayValue }) {
+export default function Screen({ calculatorValue }) {
+    console.log(calculatorValue)
     return (
         <WScreen>
             <WDisplayScreen>
                 555
             </WDisplayScreen>
             <WCalculatorScreen>
-                {displayValue}
+                {calculatorValue}
             </WCalculatorScreen>
         </WScreen>
     )
@@ -35,9 +36,9 @@ const WDisplayScreen = styled.span`
 
 const WCalculatorScreen = styled.span`
     height:92px;
+    padding:5px;
     background-color:${color.screenColor};
     display:inline-block;
-    height:100%;
     font-size:80px;
     color:#fff;
 `

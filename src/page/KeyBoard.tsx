@@ -2,64 +2,103 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
-import useDecimalControl from '../hooks/useDecimalControl'
+import { decimalControl, markControl } from '../util'
 
-export default function KeyBoard({ setDisplayValue }) {
-    // const decimalCount = useRef(0)// 紀錄按幾次數字 非小數點
-    const [total, setTotal] = useState(0)// 記錄所有數字
+export default function KeyBoard({ setCalculatorValue, calculatorValue }) {
+
+    //小數點 
+    //推 + - 
+
+    // const [totalString, setTotalString] = useState<String>("")// 記錄所有數字 
+    const lastArrayString = calculatorValue.length > 0 ? calculatorValue[calculatorValue.length - 1] : ""
+
+    //應改可以用 useRef 按符號清空
+    const [calcArray, setCalcArray] = useState()
     // const 
-    const handelClick = (e) => {
+    const handleClick = (e) => {
         const inputString = e.target.innerHTML
-        const returnTotal = useDecimalControl({ inputString, total })
-        setTotal(returnTotal)
-        setDisplayValue(returnTotal)
+        const returnTotal = decimalControl({ inputString, lastArrayString })
+        setCalculatorValue(prevState => {
+            let state = prevState
+            state.pop()
+            return [...state, returnTotal]
+        })
     }
+
+    // 考慮是否要讓 初始值為0 
+    // 是 0
+    // 1. 第一次按數字 為按的數字
+    // 2. 第一次按+號為 0 + 某數
+
+
+
+    const handlePunctuationClick = (e) => {
+        const inputMarkString = e.target.innerHTML
+        const controlString = markControl(inputMarkString, lastArrayString)
+        console.log({ controlString })
+        if (controlString === "same") {
+            return
+        }
+        if (controlString === "change") {
+            setCalculatorValue(prevState => {
+                let state = prevState
+                state.pop()
+                return [...state, inputMarkString]
+            })
+            return
+        }
+
+        setCalculatorValue(prevState => [...prevState, inputMarkString])
+    }
+
+
+
 
     return (
         <WKeyBoard>
-            <WSevenClickBlock onClick={handelClick}>
+            <WSevenClickBlock onClick={handleClick}>
                 7
             </WSevenClickBlock>
-            <WEightClickBlock onClick={handelClick}>
+            <WEightClickBlock onClick={handleClick}>
                 8
             </WEightClickBlock>
-            <WNightClickBlock onClick={handelClick}>
+            <WNightClickBlock onClick={handleClick}>
                 9
             </WNightClickBlock>
-            <WDividedClickBlock>
+            <WDividedClickBlock >
                 ÷
             </WDividedClickBlock>
-            <WFourClickBlock onClick={handelClick}>
+            <WFourClickBlock onClick={handleClick}>
                 4
             </WFourClickBlock>
-            <WFiveClickBlock onClick={handelClick}>
+            <WFiveClickBlock onClick={handleClick}>
                 5
             </WFiveClickBlock>
-            <WSixClickBlock onClick={handelClick}>
+            <WSixClickBlock onClick={handleClick}>
                 6
             </WSixClickBlock>
             <WMultiplyClickBlock>
                 ×
             </WMultiplyClickBlock>
-            <WOneClickBlock onClick={handelClick}>
+            <WOneClickBlock onClick={handleClick}>
                 1
             </WOneClickBlock>
-            <WTwoClickBlock onClick={handelClick}>
+            <WTwoClickBlock onClick={handleClick}>
                 2
             </WTwoClickBlock>
-            <WThreeClickBlock onClick={handelClick}>
+            <WThreeClickBlock onClick={handleClick}>
                 3
             </WThreeClickBlock>
-            <WPlusClickBlock>
+            <WPlusClickBlock onClick={handlePunctuationClick}>
                 +
             </WPlusClickBlock>
-            <WZeroClickBlock onClick={handelClick}>
+            <WZeroClickBlock onClick={handleClick}>
                 0
             </WZeroClickBlock>
-            <WDoubleZeroClickBlock onClick={handelClick}>
+            <WDoubleZeroClickBlock onClick={handleClick}>
                 00
             </WDoubleZeroClickBlock>
-            <WPointClickBlock>
+            <WPointClickBlock onClick={handleClick}>
                 .
             </WPointClickBlock>
             <WDecreaseClickBlock>

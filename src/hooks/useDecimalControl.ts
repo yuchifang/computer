@@ -1,12 +1,28 @@
-// // input 按鍵按的字串
-// // output 目前的數字 
-export default function useDecimalControl({ inputString, total }) {
-    if (inputString === "00") {
-        return total * 100
+// 小數點
+// 1. inputString 是小數點
+// 2. total 有小數點
+function hasPoint(string) {
+    console.log(string)
+    return string.indexOf(".") > 0
+}
+
+export default function useDecimalControl({ inputString, totalString }) {
+    if (inputString === '.' && hasPoint(totalString)) {
+        return totalString
     }
 
-    let decimalNumber = Number(inputString)
-    total = total * 10
+    //     if (inputString === '.') {
+    //         return totalString + "."
+    //     }
 
-    return total + decimalNumber
+    //     totalString 
+    // }
+
+
+
+    if (inputString === "00") {
+        return totalString + "00"
+    }
+
+    return totalString + inputString
 }

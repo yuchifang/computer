@@ -17,7 +17,6 @@ export default function Table() {
         displayArray: [],
     })
 
-    console.log({ screenState })
     return (
         <WTableBlock>
             <Screen
@@ -31,6 +30,17 @@ export default function Table() {
 }
 // 限制字數
 // 最後看看要怎麼處理 import 的打包
+// 如果算式 沒成立 按等於 沒反映
+// 第一個符號不能是什麼 / , *,  +
+// functional programing
+/*
+                                              // 這邊注意 按+,-,*,/ |都要 更新 displayScreen
+                                              // 但小數點為 創新數字
+         num(2)   plus    num2(2)   equal(跳)   plus   num3(6)   equal(跳)
+display  Ans=0    Ans=0    Ans=0     2+2=       Ans=4   Ans=4      4+6=
+calc       2       2+       2+2       4          4+      4+6        10
+*/
+
 const WTableBlock = styled.div`
     display:grid;
     grid-template-columns: 100%;

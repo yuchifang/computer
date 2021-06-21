@@ -22,7 +22,7 @@ export function decimalControl({ inputString, lastArrayString }) {
     return lastArrayString + inputString
 }
 
-export function markControl(inputMarkString, lastArrayString) {
+export function calcMarkControl(inputMarkString, lastArrayString) {
     // 特別判斷負號
     if (lastArrayString === inputMarkString) {
         return "same"
@@ -66,4 +66,31 @@ export function handleEqualAnswer(calculatorArray) {
 
     return total 字串
     */
+}
+
+export function handlePriorityCalcMark(calculatorArray) {
+    let Arraylength = calculatorArray.length
+    let index = 0
+    let newArray = []
+    while (Arraylength > index) {
+        const [_, ...calcTarget] = calculatorArray[index]
+        const switchType = calculatorArray[index][0] // 判斷陣列字串第一個字為什麼符號
+        let prevTarget
+
+        switch (switchType) {
+            case "×":
+                prevTarget = Number(newArray[index - 1])
+                newArray.push(`+${prevTarget * Number(calcTarget)}`)
+                newArray[index - 1] = undefined
+                break;
+            case "÷":
+                prevTarget = Number(calculatorArray[index - 1])
+                newArray.push(`+${prevTarget / Number(calcTarget)}`)
+                break;
+            default: // no calc symbol
+                newArray.push(`+${calculatorArray[index]}`)
+        }
+        index++
+    }
+    return newArray.filter(item => item !== undefined)
 }

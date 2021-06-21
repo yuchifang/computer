@@ -11,9 +11,10 @@ export default function Table() {
         }
      */
     const [screenState, setScreenState] = useState({
-        finalValue: 0,  // 表示計算完 的值 或初始值
+        finalValue: "0",  // 表示計算完 的值 或初始值
         hasFinalValue: true,
-        calculatorArray: [0]
+        calculatorArray: ["0"],
+        displayArray: [],
     })
 
     console.log({ screenState })

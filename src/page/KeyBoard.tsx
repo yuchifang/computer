@@ -25,11 +25,16 @@ export default function KeyBoard({
 
         if (hasFinalValue) { // 處理是否計算完成的答案值,及初始值
             setScreenState?.(prevState => {
+
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+
                 return {
                     ...prevState,
                     finalValue: null,
                     hasFinalValue: false,
-                    calculatorArray: [inputString]
+                    calculatorArray: [inputString],
+                    displayArray: [displayString]
                 }
             })
 
@@ -37,7 +42,6 @@ export default function KeyBoard({
         }
 
         const returnTotal = decimalControl({ inputString, lastArrayString })
-        console.log("wwwwwwwwwwwww")
         setScreenState?.(prevState => {
             let state = prevState.calculatorArray
             state.pop()
@@ -83,6 +87,8 @@ export default function KeyBoard({
     const handleEqualClick = (e) => {
         const inputEqualString = e.target.innerHTML
         const answerString = handleEqualAnswer(calculatorArray)
+        const displayString = calculatorArray.join("").split("").join(" ")
+        console.log({ displayString })
 
         // 把陣列處理完 在用單一陣列做顯示
         // 顯示在display上
@@ -96,11 +102,14 @@ export default function KeyBoard({
         // 3. 先乘除後加減
         // 4. 
         */
+
         setScreenState?.((prevState) => {
             return {
                 ...prevState,
+                finalValue: answerString,
                 hasFinalValue: true,
-                calculatorArray: [answerString]
+                calculatorArray: [answerString],
+                displayArray: [`${displayString} ${inputEqualString} `]
             }
         })
         console.log(answerString)

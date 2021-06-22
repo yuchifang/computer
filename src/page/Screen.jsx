@@ -34,10 +34,10 @@ const WDisplayScreen = styled.span`
     `
 
 const WCalculatorScreen = styled.span`
-    height:92px;
     padding:5px;
     background-color:${color.screenColor};
     display:inline-block;
     font-size:80px;
+    line-height:80px;
     color:#fff;
 `

@@ -3,9 +3,9 @@ export function hasPoint(string) {
     return string.indexOf(".") > 0
 }
 
-export function decimalControl({ inputString, lastArrayString }) {
-    if (inputString === '.' && hasPoint(lastArrayString)) {
-        return lastArrayString
+export function decimalControl({ inputString,  lastCalcString }) {
+    if (inputString === '.' && hasPoint(lastCalcString)) {
+        return lastCalcString
     }
 
     //     if (inputString === '.') {
@@ -16,21 +16,24 @@ export function decimalControl({ inputString, lastArrayString }) {
     // }
 
     if (inputString === "00") {
-        return lastArrayString + "00"
+        return lastCalcString + "00"
     }
 
-    return lastArrayString + inputString
+    return lastCalcString + inputString
 }
 
-export function calcMarkControl(inputMarkString, lastArrayString) {
+export function calcMarkControl(inputMarkString, lastWord) {
+    if(/\÷|\×/.test(lastWord)&&inputMarkString==="-") return "normal"
     // 特別判斷負號
-    if (lastArrayString === inputMarkString) {
+    if (lastWord === inputMarkString) {
         return "same"
     }
 
-    if (isNaN(Number(lastArrayString))) { // 是運算符號
+    if (isNaN(Number(lastWord))) { // 是運算符號
         return "change"
     }
+
+    if(lastWord === '-') return  "same"
 
     return "normal"
 
@@ -42,20 +45,19 @@ export function handleEqualAnswer(calculatorArray) {
     let totalNumber = 0
     while (Arraylength > index) {
         const calcTarget = Number(calculatorArray[index])
-        const switchType = calculatorArray[index][0] // 判斷陣列字串第一個字為什麼符號
 
+        // 判斷陣列字串第一個字為什麼符號
+        const switchType = calculatorArray[index][0] 
         switch (switchType) {
             case "+":
                 totalNumber += calcTarget
                 break;
             case "-":
-                totalNumber - calcTarget
+                totalNumber += calcTarget
                 break;
             default: // no operation symbol
                 totalNumber += calcTarget
         }
-
-
         index++
     }
     return String(totalNumber)
@@ -69,30 +71,35 @@ export function handleEqualAnswer(calculatorArray) {
 }
 
 export function handlePriorityCalcMark(calculatorArray) {
-    if(!/(\/|\×)/g.test(calculatorArray.join(""))) return calculatorArray
+    if(!/(\÷|\×)/g.test(calculatorArray.join(""))) return calculatorArray
+   
      //如果有* 或 / 就執行下面的邏輯
     let Arraylength = calculatorArray.length
     let index = 0
     let newArray = []
     while (Arraylength > index) {
         const [_, ...calcTargetString] = calculatorArray[index]
+        // const calcTarget = Number(calculatorArray[index])
         const switchType = calculatorArray[index][0] // 判斷陣列字串第一個字為什麼符號
         let prevTarget
 
         switch (switchType) {
             case "×":
+                newArray=handleCalc({})
                 prevTarget = Number(newArray[index - 1])
-                newArray.push(`+${prevTarget * Number(calcTargetString)}`)
+                newArray.push(`${prevTarget * Number(calcTargetString.join(""))}`)
                 newArray[index - 1] = undefined
                 break;
             case "÷":
                 prevTarget = Number(calculatorArray[index - 1])
-                newArray.push(`+${prevTarget / Number(calcTargetString)}`)
+                newArray.push(`${prevTarget / Number(calcTargetString.join(""))}`)
+                newArray[index - 1] = undefined                
                 break;
             default: // no calc symbol
-                newArray.push(`+${calculatorArray[index]}`)
+                newArray.push(`${calculatorArray[index]}`)
         }
         index++
     }
+    console.log(newArray)
     return newArray.filter(item => item !== undefined)
 }

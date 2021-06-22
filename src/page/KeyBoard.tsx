@@ -6,7 +6,7 @@ import { decimalControl, calcMarkControl, handleEqualAnswer, handlePriorityCalcM
 
 export default function KeyBoard({
     setScreenState,
-    screenState: { calculatorArray, finalValue, hasFinalValue }
+    screenState: { calculatorArray,displayArray, finalValue, hasFinalValue ,isInitial}
 }) {
 
     //小數點 
@@ -34,6 +34,7 @@ export default function KeyBoard({
                 return {
                     ...prevState,
                     finalValue: null,
+                    isInitial:false,
                     hasFinalValue: false,
                     calculatorArray: [inputString],
                     displayArray: [displayString]
@@ -43,7 +44,7 @@ export default function KeyBoard({
             return
         }
 
-        const returnTotal = decimalControl({ inputString, lastArrayString: lastCalcString })
+        const returnTotal = decimalControl({ inputString,  lastCalcString })
         setScreenState?.(prevState => {
             let state = prevState.calculatorArray
             state.pop()
@@ -61,6 +62,7 @@ export default function KeyBoard({
         if (markRelation === "same") {
             return
         }
+        
         if (markRelation === "change") {
             setScreenState?.(prevState => {
                 let state = prevState.calculatorArray
@@ -99,15 +101,74 @@ export default function KeyBoard({
         })
     }
 
+    const handleSubtractClick =(e)=>{
+        const subtractString = e.target.innerHTML
+        const markRelation = calcMarkControl(subtractString, lastWord)
+        if(markRelation === "same") return  
+
+          
+        if (markRelation === "change") {
+            setScreenState?.(prevState => {
+                let state = prevState.calculatorArray
+                state.pop()
+                return {
+                    ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
+                    calculatorArray: [...state, subtractString]
+                }
+            })
+            return
+        }
+
+        if(hasFinalValue){
+            setScreenState?.(prevState => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+                return {
+                    ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
+                    displayArray: [displayString],
+                    calculatorArray: [...prevState.calculatorArray, subtractString]
+                }
+            })
+            return
+        }
+        
+        if (isInitial) { // 處理是否計算完成的答案值,及初始值
+            setScreenState?.(prevState => {
+
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+
+                return {
+                    ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
+                    calculatorArray: [subtractString],
+                    displayArray: [displayString]
+                }
+            })
+            return
+        }
+
+        setScreenState?.(prevState => {
+
+            return {
+                ...prevState,
+                calculatorArray: [...prevState.calculatorArray, subtractString]
+            }
+        })
+    }
+
     // util.js 72行
 
     const handleEqualClick = (e) => {
         const inputEqualString = e.target.innerHTML
         const returnArr = handlePriorityCalcMark(calculatorArray)
-        console.log(returnArr)
         const answerString = handleEqualAnswer(returnArr)
-        const displayString = calculatorArray.join("").split("").join(" ")
-
+        const displayString = calculatorArray.join("").split("").join("")
         // 把陣列處理完 在用單一陣列做顯示
         // 顯示在display上
         /*
@@ -126,6 +187,7 @@ export default function KeyBoard({
                 ...prevState,
                 finalValue: answerString,
                 hasFinalValue: true,
+                isInitial:false,
                 calculatorArray: [answerString],
                 displayArray: [`${displayString} ${inputEqualString} `]
             }
@@ -146,7 +208,7 @@ export default function KeyBoard({
             <WNightClickBlock onClick={handleNumberClick}>
                 9
             </WNightClickBlock>
-            <WDividedClickBlock >
+            <WDividedClickBlock onClick={handleCalcMarkClick}>
                 ÷
             </WDividedClickBlock>
             <WFourClickBlock onClick={handleNumberClick}>
@@ -170,9 +232,9 @@ export default function KeyBoard({
             <WThreeClickBlock onClick={handleNumberClick}>
                 3
             </WThreeClickBlock>
-            <WPlusClickBlock onClick={handleCalcMarkClick}>
+            <WAddClickBlock onClick={handleCalcMarkClick}>
                 +
-            </WPlusClickBlock>
+            </WAddClickBlock>
             <WZeroClickBlock onClick={handleNumberClick}>
                 0
             </WZeroClickBlock>
@@ -182,7 +244,7 @@ export default function KeyBoard({
             <WPointClickBlock onClick={handleNumberClick}>
                 .
             </WPointClickBlock>
-            <WDecreaseClickBlock>
+            <WDecreaseClickBlock onClick={handleSubtractClick}>
                 -
             </WDecreaseClickBlock>
             <WAllClearClickBlock>
@@ -328,7 +390,7 @@ const WThreeClickBlock = styled(Button)`
 
 `
 
-const WPlusClickBlock = styled(Button)`
+const WAddClickBlock = styled(Button)`
     cursor:pointer;
     grid-row: 3/4;
     grid-column:4/5;

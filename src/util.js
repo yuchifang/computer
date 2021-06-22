@@ -69,23 +69,25 @@ export function handleEqualAnswer(calculatorArray) {
 }
 
 export function handlePriorityCalcMark(calculatorArray) {
+    if(!/(\/|\×)/g.test(calculatorArray.join(""))) return calculatorArray
+     //如果有* 或 / 就執行下面的邏輯
     let Arraylength = calculatorArray.length
     let index = 0
     let newArray = []
     while (Arraylength > index) {
-        const [_, ...calcTarget] = calculatorArray[index]
+        const [_, ...calcTargetString] = calculatorArray[index]
         const switchType = calculatorArray[index][0] // 判斷陣列字串第一個字為什麼符號
         let prevTarget
 
         switch (switchType) {
             case "×":
                 prevTarget = Number(newArray[index - 1])
-                newArray.push(`+${prevTarget * Number(calcTarget)}`)
+                newArray.push(`+${prevTarget * Number(calcTargetString)}`)
                 newArray[index - 1] = undefined
                 break;
             case "÷":
                 prevTarget = Number(calculatorArray[index - 1])
-                newArray.push(`+${prevTarget / Number(calcTarget)}`)
+                newArray.push(`+${prevTarget / Number(calcTargetString)}`)
                 break;
             default: // no calc symbol
                 newArray.push(`+${calculatorArray[index]}`)

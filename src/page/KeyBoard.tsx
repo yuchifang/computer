@@ -75,16 +75,31 @@ export default function KeyBoard({
             return
         }
 
+        if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
+            setScreenState?.(prevState => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+                return {
+                    ...prevState,
+                    finalValue: null,
+                    hasFinalValue: false,
+                    displayArray: [displayString],
+                    calculatorArray: [...prevState.calculatorArray, inputMarkString]
+                }
+            })
+            return
+        }
+
         setScreenState?.(prevState => {
 
             return {
                 ...prevState,
-                finalValue: null,
-                hasFinalValue: false,
                 calculatorArray: [...prevState.calculatorArray, inputMarkString]
             }
         })
     }
+
+    // util.js 72行
 
     const handleEqualClick = (e) => {
         const inputEqualString = e.target.innerHTML

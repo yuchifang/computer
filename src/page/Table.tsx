@@ -15,7 +15,7 @@ export default function Table() {
         hasFinalValue: true,
         calculatorArray: ["0"],
         displayArray: [],
-        isInitial:true
+        isInitial: true
     })
 
     return (
@@ -35,10 +35,7 @@ export default function Table() {
 // 第一個符號不能是什麼 / , *,  + 負號可以是第一個字
 // = 的動畫 按數字的動畫
 // functional programing?
-// 乘法算 ok
-// 除法算 ok
-// 刪除 減法 AC 
-// 處理 -3 * -3的問題
+//  AC 刪除
 // 
 /*
 */

@@ -3,7 +3,7 @@ export function hasPoint(string) {
     return string.indexOf(".") > 0
 }
 
-export function decimalControl({ inputString,  lastCalcString }) {
+export function decimalControl({ inputString, lastCalcString }) {
     if (inputString === '.' && hasPoint(lastCalcString)) {
         return lastCalcString
     }
@@ -23,7 +23,7 @@ export function decimalControl({ inputString,  lastCalcString }) {
 }
 
 export function calcMarkControl(inputMarkString, lastWord) {
-    if(/\÷|\×/.test(lastWord)&&inputMarkString==="-") return "normal"
+    if (/\÷|\×/.test(lastWord) && inputMarkString === "-") return "normal"
     // 特別判斷負號
     if (lastWord === inputMarkString) {
         return "same"
@@ -33,13 +33,13 @@ export function calcMarkControl(inputMarkString, lastWord) {
         return "change"
     }
 
-    if(lastWord === '-') return  "same"
+    if (lastWord === '-') return "same"
 
     return "normal"
 
 }
 
-export function handleEqualAnswer(calculatorArray) {
+export function handleNormalCalc(calculatorArray) {
     let Arraylength = calculatorArray.length
     let index = 0
     let totalNumber = 0
@@ -47,7 +47,7 @@ export function handleEqualAnswer(calculatorArray) {
         const calcTarget = Number(calculatorArray[index])
 
         // 判斷陣列字串第一個字為什麼符號
-        const switchType = calculatorArray[index][0] 
+        const switchType = calculatorArray[index][0]
         switch (switchType) {
             case "+":
                 totalNumber += calcTarget
@@ -70,36 +70,69 @@ export function handleEqualAnswer(calculatorArray) {
     */
 }
 
-export function handlePriorityCalcMark(calculatorArray) {
-    if(!/(\÷|\×)/g.test(calculatorArray.join(""))) return calculatorArray
-   
-     //如果有* 或 / 就執行下面的邏輯
-    let Arraylength = calculatorArray.length
+function handleMultiplyCalc({ controlCalcArray, index }) {
+    const prevTarget = Number(controlCalcArray[index - 1])
+    const [_, ...calcTargetString] = controlCalcArray[index]
+
+    if (controlCalcArray[index].length > 1) {
+        controlCalcArray.push(`${prevTarget * Number(calcTargetString.join(""))}`)
+        controlCalcArray[index - 1] = undefined
+        controlCalcArray[index] = undefined
+        return controlCalcArray
+    }
+
+    let nextTarget = Number(controlCalcArray[index + 1])
+    controlCalcArray.push(`${prevTarget * nextTarget}`)
+    controlCalcArray[index - 1] = undefined
+    controlCalcArray[index] = undefined
+    controlCalcArray[index + 1] = undefined
+    return controlCalcArray
+
+}
+
+function handleDivideCalc({ controlCalcArray, index }) {
+    const prevTarget = Number(controlCalcArray[index - 1])
+    const [_, ...calcTargetString] = controlCalcArray[index]
+
+    if (controlCalcArray[index].length > 1) {
+        controlCalcArray.push(`${prevTarget / Number(calcTargetString.join(""))}`)
+        controlCalcArray[index - 1] = undefined
+        controlCalcArray[index] = undefined
+        return controlCalcArray
+    }
+
+    let nextTarget = Number(controlCalcArray[index + 1])
+    controlCalcArray.push(`${prevTarget / nextTarget}`)
+    controlCalcArray[index - 1] = undefined
+    controlCalcArray[index] = undefined
+    controlCalcArray[index + 1] = undefined
+    return controlCalcArray
+
+
+}
+
+export function handlePriorityCalc(controlCalcArray) {
+    if (!/(\÷|\×)/g.test(controlCalcArray.join(""))) return controlCalcArray
+
+    //如果有* 或 / 就執行下面的邏輯
+    let Arraylength = controlCalcArray.length
     let index = 0
-    let newArray = []
+
     while (Arraylength > index) {
-        const [_, ...calcTargetString] = calculatorArray[index]
-        // const calcTarget = Number(calculatorArray[index])
-        const switchType = calculatorArray[index][0] // 判斷陣列字串第一個字為什麼符號
-        let prevTarget
+
+        const switchType = controlCalcArray[index]?.[0] // 判斷陣列字串第一個字為什麼符號
 
         switch (switchType) {
             case "×":
-                newArray=handleCalc({})
-                prevTarget = Number(newArray[index - 1])
-                newArray.push(`${prevTarget * Number(calcTargetString.join(""))}`)
-                newArray[index - 1] = undefined
+                controlCalcArray = handleMultiplyCalc({ controlCalcArray, index })
                 break;
             case "÷":
-                prevTarget = Number(calculatorArray[index - 1])
-                newArray.push(`${prevTarget / Number(calcTargetString.join(""))}`)
-                newArray[index - 1] = undefined                
+                controlCalcArray = handleDivideCalc({ controlCalcArray, index })
                 break;
             default: // no calc symbol
-                newArray.push(`${calculatorArray[index]}`)
+
         }
         index++
     }
-    console.log(newArray)
-    return newArray.filter(item => item !== undefined)
+    return controlCalcArray.filter(item => item !== undefined)
 }

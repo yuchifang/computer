@@ -2,11 +2,11 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
-import { decimalControl, calcMarkControl, handleEqualAnswer, handlePriorityCalcMark } from '../util'
+import { decimalControl, calcMarkControl, handleNormalCalc, handlePriorityCalc } from '../util'
 
 export default function KeyBoard({
     setScreenState,
-    screenState: { calculatorArray,displayArray, finalValue, hasFinalValue ,isInitial}
+    screenState: { calculatorArray, displayArray, finalValue, hasFinalValue, isInitial }
 }) {
 
     //小數點 
@@ -34,7 +34,7 @@ export default function KeyBoard({
                 return {
                     ...prevState,
                     finalValue: null,
-                    isInitial:false,
+                    isInitial: false,
                     hasFinalValue: false,
                     calculatorArray: [inputString],
                     displayArray: [displayString]
@@ -44,7 +44,7 @@ export default function KeyBoard({
             return
         }
 
-        const returnTotal = decimalControl({ inputString,  lastCalcString })
+        const returnTotal = decimalControl({ inputString, lastCalcString })
         setScreenState?.(prevState => {
             let state = prevState.calculatorArray
             state.pop()
@@ -62,7 +62,7 @@ export default function KeyBoard({
         if (markRelation === "same") {
             return
         }
-        
+
         if (markRelation === "change") {
             setScreenState?.(prevState => {
                 let state = prevState.calculatorArray
@@ -101,12 +101,12 @@ export default function KeyBoard({
         })
     }
 
-    const handleSubtractClick =(e)=>{
+    const handleSubtractClick = (e) => {
         const subtractString = e.target.innerHTML
         const markRelation = calcMarkControl(subtractString, lastWord)
-        if(markRelation === "same") return  
+        if (markRelation === "same") return
 
-          
+
         if (markRelation === "change") {
             setScreenState?.(prevState => {
                 let state = prevState.calculatorArray
@@ -121,7 +121,7 @@ export default function KeyBoard({
             return
         }
 
-        if(hasFinalValue){
+        if (hasFinalValue) {
             setScreenState?.(prevState => {
                 const prevFinalValue = prevState.finalValue
                 const displayString = "Ans = " + prevFinalValue
@@ -135,7 +135,7 @@ export default function KeyBoard({
             })
             return
         }
-        
+
         if (isInitial) { // 處理是否計算完成的答案值,及初始值
             setScreenState?.(prevState => {
 
@@ -166,8 +166,10 @@ export default function KeyBoard({
 
     const handleEqualClick = (e) => {
         const inputEqualString = e.target.innerHTML
-        const returnArr = handlePriorityCalcMark(calculatorArray)
-        const answerString = handleEqualAnswer(returnArr)
+        const controlCalcArray = [...calculatorArray]
+        const returnArr = handlePriorityCalc(controlCalcArray)
+        console.log({ calculatorArray })
+        const answerString = handleNormalCalc(returnArr)
         const displayString = calculatorArray.join("").split("").join("")
         // 把陣列處理完 在用單一陣列做顯示
         // 顯示在display上
@@ -187,7 +189,7 @@ export default function KeyBoard({
                 ...prevState,
                 finalValue: answerString,
                 hasFinalValue: true,
-                isInitial:false,
+                isInitial: false,
                 calculatorArray: [answerString],
                 displayArray: [`${displayString} ${inputEqualString} `]
             }

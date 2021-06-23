@@ -9,19 +9,11 @@ export default function KeyBoard({
     screenState: { calculatorArray, displayArray, finalValue, hasFinalValue, isInitial }
 }) {
 
-    //小數點 
-    //推 + - 
-
-    // const [totalString, setTotalString] = useState<String>("")// 記錄所有數字 
-
-
     const calculatorLength = calculatorArray.length
     const lastCalcString = calculatorArray[calculatorLength - 1]
     const lastWord = lastCalcString[lastCalcString.length - 1]
 
-    //應改可以用 useRef 按符號清空
-    // const [calcArray, setCalcArray] = useState()
-    // const 
+
     const handleNumberClick = (e) => {
         const inputString = e.target.innerHTML
 
@@ -57,7 +49,6 @@ export default function KeyBoard({
 
     const handleCalcMarkClick = (e) => {
         const inputMarkString = e.target.innerHTML
-        const markRelation = calcMarkControl(inputMarkString, lastWord)
 
         if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
             setScreenState?.(prevState => {
@@ -76,8 +67,9 @@ export default function KeyBoard({
 
         if (isInitial) return
 
+        const markRelation = calcMarkControl({ inputMarkString, lastWord, calculatorArray })
 
-        if (markRelation === "same") {
+        if (markRelation === "noChange") {
             return
         }
 
@@ -109,7 +101,7 @@ export default function KeyBoard({
     const handleSubtractClick = (e) => {
         const subtractString = e.target.innerHTML
         const markRelation = calcMarkControl(subtractString, lastWord)
-        if (markRelation === "same") return
+        if (markRelation === "noChange") return
 
 
         if (markRelation === "change") {
@@ -170,18 +162,7 @@ export default function KeyBoard({
 
 
     const handleEqualClick = (e) => {
-        // 把陣列處理完 在用單一陣列做顯示
-        // 顯示在display上
-        /*
-        // 1. 處理加減乘除在["3","+3"] 的情況
-        // 2. 看看算是會不會成立
-        //    不會成立情況有哪些原因
-              最後一個是符號
-              /0顯示 infinity
 
-        // 3. 先乘除後加減
-        // 4. 
-        */
         const inputEqualString = e.target.innerHTML
         const controlCalcArray = [...calculatorArray]
         const isCompleteFormula = handleFormula(controlCalcArray)
@@ -233,7 +214,6 @@ export default function KeyBoard({
     }
 
     const handleBackSpaceClick = () => {
-        // 如果已經按等於 則會清除一個calc值 沒值的話 為0 並等於 按AC 的狀態
 
         if (hasFinalValue) {
             setScreenState?.(prevState => {
@@ -250,7 +230,6 @@ export default function KeyBoard({
 
 
         setScreenState?.(prevState => {
-            // const prevCalcArray = prevState.calculatorArray
             const calcArray = prevState.calculatorArray
             const lastString = calcArray.pop()
             const lastStringLength = lastString.length

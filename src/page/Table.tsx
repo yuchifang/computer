@@ -32,12 +32,10 @@ export default function Table() {
 // 限制字數
 // 最後看看要怎麼處理 import 的打包
 // 如果算式 沒成立 按等於 沒反映
-// 第一個符號不能是什麼 / , *,  + 負號可以是第一個字
 // = 的動畫 按數字的動畫
 // 最小化 ugly
 // functional programing?
-// 3.+. 出問題
-// ...出問題
+
 
 
 

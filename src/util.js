@@ -1,19 +1,14 @@
 
+const calcMarkRegExp = new RegExp(/\÷|\×|\+|\-/)
 export function hasPoint(string) {
-    return string.indexOf(".") > 0
+    return string.indexOf(".") > -1
 }
 
 export function decimalControl({ inputString, lastCalcString }) {
+
     if (inputString === '.' && hasPoint(lastCalcString)) {
         return lastCalcString
     }
-
-    //     if (inputString === '.') {
-    //         return totalString + "."
-    //     }
-
-    //     totalString 
-    // }
 
     if (inputString === "00") {
         return lastCalcString + "00"
@@ -22,19 +17,23 @@ export function decimalControl({ inputString, lastCalcString }) {
     return lastCalcString + inputString
 }
 
-export function calcMarkControl(inputMarkString, lastWord) {
+export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }) {
     if (/\÷|\×/.test(lastWord) && inputMarkString === "-") return "normal"
-    // 特別判斷負號
+    // 特別判斷負號 //3*-3
     if (lastWord === inputMarkString) {
-        return "same"
+        return "noChange"
     }
 
-    if (isNaN(Number(lastWord))) { // 是運算符號
+    if (calcMarkRegExp.test(lastWord)) { // 是運算符號
         return "change"
     }
 
-    if (lastWord === '-') return "same"
-
+    if (lastWord === '-') return "noChange"
+    if (calcMarkRegExp.test(inputMarkString) &&
+        calculatorArray.length === 1 &&
+        lastWord === "." &&
+        calculatorArray[0].length === 1) return "noChange"
+    //.+3 = error
     return "normal"
 
 }
@@ -61,13 +60,6 @@ export function handleNormalCalc(calculatorArray) {
         index++
     }
     return String(totalNumber)
-    /*
-    外層 變數 在switch做累加 
-    // 先不考慮 *,/,+,- // 或許這邊只處理加的部分 乘除處裡候傳到這邊
-    // for 迴圈跑陣列包switch
-
-    return total 字串
-    */
 }
 
 function handleMultiplyCalc({ controlCalcArray, index }) {
@@ -141,6 +133,10 @@ export function handleFormula(controlCalcArray) {
     const controlCalcArrayLength = controlCalcArray.length
     const lastString = controlCalcArray[controlCalcArrayLength - 1]
     const lastWord = lastString[lastString.length - 1]
-    if (/\÷|\×|\+|\-/.test(lastWord)) return false
+    const LastSecondWord = lastString[lastString.length - 2]
+    console.log({ controlCalcArray })
+    console.log({ LastSecondWord })
+    if (calcMarkRegExp.test(lastWord)) return false
+    if (lastWord === "." && calcMarkRegExp.test(LastSecondWord)) return false
     return true
 }

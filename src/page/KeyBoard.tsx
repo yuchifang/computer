@@ -59,6 +59,24 @@ export default function KeyBoard({
         const inputMarkString = e.target.innerHTML
         const markRelation = calcMarkControl(inputMarkString, lastWord)
 
+        if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
+            setScreenState?.(prevState => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+                return {
+                    ...prevState,
+                    hasFinalValue: false,
+                    isInitial: false,
+                    displayArray: [displayString],
+                    calculatorArray: [...prevState.calculatorArray, inputMarkString]
+                }
+            })
+            return
+        }
+
+        if (isInitial) return
+
+
         if (markRelation === "same") {
             return
         }
@@ -71,25 +89,13 @@ export default function KeyBoard({
                     ...prevState,
                     finalValue: null,
                     hasFinalValue: false,
+                    isInitial: false,
                     calculatorArray: [...state, inputMarkString]
                 }
             })
             return
         }
 
-        if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
-            setScreenState?.(prevState => {
-                const prevFinalValue = prevState.finalValue
-                const displayString = "Ans = " + prevFinalValue
-                return {
-                    ...prevState,
-                    hasFinalValue: false,
-                    displayArray: [displayString],
-                    calculatorArray: [...prevState.calculatorArray, inputMarkString]
-                }
-            })
-            return
-        }
 
         setScreenState?.(prevState => {
 

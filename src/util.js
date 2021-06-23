@@ -136,3 +136,11 @@ export function handlePriorityCalc(controlCalcArray) {
     }
     return controlCalcArray.filter(item => item !== undefined)
 }
+
+export function handleFormula(controlCalcArray) {
+    const controlCalcArrayLength = controlCalcArray.length
+    const lastString = controlCalcArray[controlCalcArrayLength - 1]
+    const lastWord = lastString[lastString.length - 1]
+    if (/\÷|\×|\+|\-/.test(lastWord)) return false
+    return true
+}

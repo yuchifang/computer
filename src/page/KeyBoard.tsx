@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
-import { decimalControl, calcMarkControl, handleNormalCalc, handlePriorityCalc } from '../util'
+import { decimalControl, calcMarkControl, handleNormalCalc, handlePriorityCalc, handleFormula } from '../util'
 
 export default function KeyBoard({
     setScreenState,
@@ -33,7 +33,6 @@ export default function KeyBoard({
 
                 return {
                     ...prevState,
-                    finalValue: null,
                     isInitial: false,
                     hasFinalValue: false,
                     calculatorArray: [inputString],
@@ -50,6 +49,7 @@ export default function KeyBoard({
             state.pop()
             return {
                 ...prevState,
+                isInitial: false,
                 calculatorArray: [...state, returnTotal]
             }
         })
@@ -83,7 +83,6 @@ export default function KeyBoard({
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
-                    finalValue: null,
                     hasFinalValue: false,
                     displayArray: [displayString],
                     calculatorArray: [...prevState.calculatorArray, inputMarkString]
@@ -121,6 +120,22 @@ export default function KeyBoard({
             return
         }
 
+        if (isInitial) { // 處理是否計算完成的答案值,及初始值
+            setScreenState?.(prevState => {
+
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+
+                return {
+                    ...prevState,
+                    hasFinalValue: false,
+                    calculatorArray: [subtractString],
+                    displayArray: [displayString]
+                }
+            })
+            return
+        }
+
         if (hasFinalValue) {
             setScreenState?.(prevState => {
                 const prevFinalValue = prevState.finalValue
@@ -136,22 +151,7 @@ export default function KeyBoard({
             return
         }
 
-        if (isInitial) { // 處理是否計算完成的答案值,及初始值
-            setScreenState?.(prevState => {
 
-                const prevFinalValue = prevState.finalValue
-                const displayString = "Ans = " + prevFinalValue
-
-                return {
-                    ...prevState,
-                    finalValue: null,
-                    hasFinalValue: false,
-                    calculatorArray: [subtractString],
-                    displayArray: [displayString]
-                }
-            })
-            return
-        }
 
         setScreenState?.(prevState => {
 
@@ -162,15 +162,8 @@ export default function KeyBoard({
         })
     }
 
-    // util.js 72行
 
     const handleEqualClick = (e) => {
-        const inputEqualString = e.target.innerHTML
-        const controlCalcArray = [...calculatorArray]
-        const returnArr = handlePriorityCalc(controlCalcArray)
-        console.log({ calculatorArray })
-        const answerString = handleNormalCalc(returnArr)
-        const displayString = calculatorArray.join("").split("").join("")
         // 把陣列處理完 在用單一陣列做顯示
         // 顯示在display上
         /*
@@ -183,6 +176,14 @@ export default function KeyBoard({
         // 3. 先乘除後加減
         // 4. 
         */
+        const inputEqualString = e.target.innerHTML
+        const controlCalcArray = [...calculatorArray]
+        const isCompleteFormula = handleFormula(controlCalcArray)
+        if (!isCompleteFormula) return
+
+        const returnArr = handlePriorityCalc(controlCalcArray)
+        const answerString = handleNormalCalc(returnArr)
+        const displayString = calculatorArray.join("").split("").join("")
 
         setScreenState?.((prevState) => {
             return {
@@ -197,7 +198,85 @@ export default function KeyBoard({
 
     }
 
+    const handleACClick = () => {
+        if (hasFinalValue) {
+            setScreenState?.(prevState => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+                return {
+                    ...prevState,
+                    finalValue: prevState.finalValue,
+                    isInitial: true,
+                    calculatorArray: ["0"],
+                    hasFinalValue: true,
+                    displayArray: [displayString],
+                }
+            })
+            return
+        }
 
+        setScreenState?.(prevState => {
+            return {
+                ...prevState,
+                finalValue: prevState.finalValue,
+                hasFinalValue: true,
+                isInitial: true,
+                calculatorArray: ["0"],
+            }
+        })
+    }
+
+    const handleBackSpaceClick = () => {
+        // 如果已經按等於 則會清除一個calc值 沒值的話 為0 並等於 按AC 的狀態
+
+        if (hasFinalValue) {
+            setScreenState?.(prevState => {
+                return {
+                    ...prevState,
+                    displayArray: [`Ans = ${prevState.finalValue}`],
+                    isInitial: true,
+                    hasFinalValue: true,
+                    calculatorArray: ["0"],
+                }
+            })
+            return
+        }
+
+
+        setScreenState?.(prevState => {
+            // const prevCalcArray = prevState.calculatorArray
+            const calcArray = prevState.calculatorArray
+            const lastString = calcArray.pop()
+            const lastStringLength = lastString.length
+
+            if (calcArray.length === 0) {
+                return {
+                    ...prevState,
+                    isInitial: true,
+                    hasFinalValue: true,
+                    calculatorArray: ["0"],
+                }
+            }
+
+            if (lastStringLength > 1) {
+                const newString = lastString.slice(0, lastStringLength - 1)
+                calcArray.push(newString)
+                return {
+                    ...prevState,
+                    calculatorArray: calcArray,
+                }
+            }
+
+            return {
+                ...prevState,
+                calculatorArray: calcArray,
+            }
+
+        })
+
+
+
+    }
 
     return (
         <WKeyBoard>
@@ -249,10 +328,10 @@ export default function KeyBoard({
             <WDecreaseClickBlock onClick={handleSubtractClick}>
                 -
             </WDecreaseClickBlock>
-            <WAllClearClickBlock>
+            <WAllClearClickBlock onClick={handleACClick}>
                 AC
             </WAllClearClickBlock>
-            <WDeleteNumberClickBlock>
+            <WDeleteNumberClickBlock onClick={handleBackSpaceClick}>
                 ⌫
             </WDeleteNumberClickBlock>
             <WEqualClickBlock onClick={handleEqualClick}>

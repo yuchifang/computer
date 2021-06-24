@@ -5,6 +5,8 @@ import Button from '../components/Button'
 import { decimalControl, calcMarkControl, handleNormalCalc, handlePriorityCalc, handleFormula } from '../util'
 
 export default function KeyBoard({
+    setAnimationState,
+    setEqualAnimationState,
     setScreenState,
     screenState: { calculatorArray, displayArray, finalValue, hasFinalValue, isInitial }
 }) {
@@ -100,7 +102,7 @@ export default function KeyBoard({
 
     const handleSubtractClick = (e) => {
         const subtractString = e.target.innerHTML
-        const markRelation = calcMarkControl(subtractString, lastWord)
+        const markRelation = calcMarkControl({ inputMarkString: subtractString, lastWord, calculatorArray })
         if (markRelation === "noChange") return
 
 
@@ -160,10 +162,8 @@ export default function KeyBoard({
         })
     }
 
+    const handleEqualClick = () => {
 
-    const handleEqualClick = (e) => {
-
-        const inputEqualString = e.target.innerHTML
         const controlCalcArray = [...calculatorArray]
         const isCompleteFormula = handleFormula(controlCalcArray)
         if (!isCompleteFormula) return
@@ -179,7 +179,7 @@ export default function KeyBoard({
                 hasFinalValue: true,
                 isInitial: false,
                 calculatorArray: [answerString],
-                displayArray: [`${displayString} ${inputEqualString} `]
+                displayArray: [`${displayString} = `]
             }
         })
 
@@ -265,61 +265,121 @@ export default function KeyBoard({
 
     return (
         <WKeyBoard>
-            <WSevenClickBlock onClick={handleNumberClick}>
+            <WSevenClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 7
             </WSevenClickBlock>
-            <WEightClickBlock onClick={handleNumberClick}>
+            <WEightClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 8
             </WEightClickBlock>
-            <WNightClickBlock onClick={handleNumberClick}>
+            <WNightClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 9
             </WNightClickBlock>
-            <WDividedClickBlock onClick={handleCalcMarkClick}>
+            <WDividedClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleCalcMarkClick}>
                 ÷
             </WDividedClickBlock>
-            <WFourClickBlock onClick={handleNumberClick}>
+            <WFourClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 4
             </WFourClickBlock>
-            <WFiveClickBlock onClick={handleNumberClick}>
+            <WFiveClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 5
             </WFiveClickBlock>
-            <WSixClickBlock onClick={handleNumberClick}>
+            <WSixClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 6
             </WSixClickBlock>
-            <WMultiplyClickBlock onClick={handleCalcMarkClick}>
+            <WMultiplyClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleCalcMarkClick}>
                 ×
             </WMultiplyClickBlock>
-            <WOneClickBlock onClick={handleNumberClick}>
+            <WOneClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 1
             </WOneClickBlock>
-            <WTwoClickBlock onClick={handleNumberClick}>
+            <WTwoClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 2
             </WTwoClickBlock>
-            <WThreeClickBlock onClick={handleNumberClick}>
+            <WThreeClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 3
             </WThreeClickBlock>
-            <WAddClickBlock onClick={handleCalcMarkClick}>
+            <WAddClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleCalcMarkClick}>
                 +
             </WAddClickBlock>
-            <WZeroClickBlock onClick={handleNumberClick}>
+            <WZeroClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 0
             </WZeroClickBlock>
-            <WDoubleZeroClickBlock onClick={handleNumberClick}>
+            <WDoubleZeroClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 00
             </WDoubleZeroClickBlock>
-            <WPointClickBlock onClick={handleNumberClick}>
+            <WPointClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleNumberClick}>
                 .
             </WPointClickBlock>
-            <WDecreaseClickBlock onClick={handleSubtractClick}>
+            <WDecreaseClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleSubtractClick}>
                 -
             </WDecreaseClickBlock>
-            <WAllClearClickBlock onClick={handleACClick}>
+            <WAllClearClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleACClick}>
                 AC
             </WAllClearClickBlock>
-            <WDeleteNumberClickBlock onClick={handleBackSpaceClick}>
+            <WDeleteNumberClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
+                onClick={handleBackSpaceClick}>
                 ⌫
             </WDeleteNumberClickBlock>
-            <WEqualClickBlock onClick={handleEqualClick}>
+            <WEqualClickBlock
+                //setEqualAnimationState
+                onClick={() => {
+                    setEqualAnimationState()
+                    handleEqualClick()
+                    return
+                }}>
                 =
             </WEqualClickBlock>
         </WKeyBoard >

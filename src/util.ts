@@ -1,10 +1,11 @@
 
 const calcMarkRegExp = new RegExp(/\÷|\×|\+|\-/)
-export function hasPoint(string) {
+export function hasPoint(string: string): boolean {
     return string.indexOf(".") > -1
 }
 
-export function decimalControl({ inputString, lastCalcString }) {
+export function decimalControl({ inputString, lastCalcString }:
+    { inputString: string, lastCalcString: string }): string {
 
     if (inputString === '.' && hasPoint(lastCalcString)) {
         return lastCalcString
@@ -17,7 +18,9 @@ export function decimalControl({ inputString, lastCalcString }) {
     return lastCalcString + inputString
 }
 
-export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }) {
+export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }: {
+    inputMarkString: string, lastWord: string, calculatorArray: string[]
+}): string {
     if (/\÷|\×/.test(lastWord) && inputMarkString === "-") return "normal"
     // 特別判斷負號 //3*-3
     if (lastWord === inputMarkString) {
@@ -29,6 +32,7 @@ export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }) 
     }
 
     if (lastWord === '-') return "noChange"
+
     if (calcMarkRegExp.test(inputMarkString) &&
         calculatorArray.length === 1 &&
         lastWord === "." &&
@@ -38,7 +42,7 @@ export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }) 
 
 }
 
-export function handleNormalCalc(calculatorArray) {
+export function handleNormalCalc(calculatorArray: string[]): string {
     let Arraylength = calculatorArray.length
     let index = 0
     let totalNumber = 0
@@ -59,10 +63,12 @@ export function handleNormalCalc(calculatorArray) {
         }
         index++
     }
-    return String(totalNumber)
+    return String(parseFloat(totalNumber.toPrecision(12)))
+
 }
 
-function handleMultiplyCalc({ controlCalcArray, index }) {
+function handleMultiplyCalc({ controlCalcArray, index }:
+    { controlCalcArray: any[], index: number }) {
     const prevTarget = Number(controlCalcArray[index - 1])
     const [_, ...calcTargetString] = controlCalcArray[index]
 
@@ -103,7 +109,7 @@ function handleDivideCalc({ controlCalcArray, index }) {
 
 }
 
-export function handlePriorityCalc(controlCalcArray) {
+export function handlePriorityCalc(controlCalcArray: string[]): string[] {
     if (!/(\÷|\×)/g.test(controlCalcArray.join(""))) return controlCalcArray
 
     //如果有* 或 / 就執行下面的邏輯
@@ -129,13 +135,11 @@ export function handlePriorityCalc(controlCalcArray) {
     return controlCalcArray.filter(item => item !== undefined)
 }
 
-export function handleFormula(controlCalcArray) {
+export function handleFormula(controlCalcArray: string[]): boolean {
     const controlCalcArrayLength = controlCalcArray.length
     const lastString = controlCalcArray[controlCalcArrayLength - 1]
     const lastWord = lastString[lastString.length - 1]
     const LastSecondWord = lastString[lastString.length - 2]
-    console.log({ controlCalcArray })
-    console.log({ LastSecondWord })
     if (calcMarkRegExp.test(lastWord)) return false
     if (lastWord === "." && calcMarkRegExp.test(LastSecondWord)) return false
     return true

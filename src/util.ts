@@ -69,41 +69,42 @@ export function handleNormalCalc(calculatorArray: string[]): string {
 
 function handleMultiplyCalc({ controlCalcArray, index }:
     { controlCalcArray: any[], index: number }) {
-    const prevTarget = Number(controlCalcArray[index - 1])
-    const [_, ...calcTargetString] = controlCalcArray[index]
 
-    if (controlCalcArray[index].length > 1) {
-        controlCalcArray.push(`${prevTarget * Number(calcTargetString.join(""))}`)
+
+    const prevNumber = Number(controlCalcArray[index - 1])
+    const [_, ...arrayOfTarget] = controlCalcArray[index]
+
+    if (controlCalcArray[index].length > 1) {// 處理 [2,x2,x3]
         controlCalcArray[index - 1] = undefined
-        controlCalcArray[index] = undefined
+        controlCalcArray[index] = `${prevNumber * Number(arrayOfTarget.join(""))}`
+
         return controlCalcArray
     }
 
+    // 處理 [2,x2,x3]
     let nextTarget = Number(controlCalcArray[index + 1])
-    controlCalcArray.push(`${prevTarget * nextTarget}`)
     controlCalcArray[index - 1] = undefined
     controlCalcArray[index] = undefined
-    controlCalcArray[index + 1] = undefined
+    controlCalcArray[index + 1] = `${prevNumber * nextTarget}`
+
     return controlCalcArray
 
 }
 
 function handleDivideCalc({ controlCalcArray, index }) {
-    const prevTarget = Number(controlCalcArray[index - 1])
+    const prevNumber = Number(controlCalcArray[index - 1])
     const [_, ...calcTargetString] = controlCalcArray[index]
 
-    if (controlCalcArray[index].length > 1) {
-        controlCalcArray.push(`${prevTarget / Number(calcTargetString.join(""))}`)
+    if (controlCalcArray[index].length > 1) { // 處理 [2,/2,/3]
         controlCalcArray[index - 1] = undefined
-        controlCalcArray[index] = undefined
+        controlCalcArray[index] = `${prevNumber / Number(calcTargetString.join(""))}`
         return controlCalcArray
     }
-
+    // 處理 [2,/,-2,x3]
     let nextTarget = Number(controlCalcArray[index + 1])
-    controlCalcArray.push(`${prevTarget / nextTarget}`)
     controlCalcArray[index - 1] = undefined
     controlCalcArray[index] = undefined
-    controlCalcArray[index + 1] = undefined
+    controlCalcArray[index + 1] = `${prevNumber / nextTarget}`
     return controlCalcArray
 
 

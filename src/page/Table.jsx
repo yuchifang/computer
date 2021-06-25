@@ -55,6 +55,7 @@ export default function Table() {
 // 最後看看要怎麼處理 import 的打包
 // 最小化 ugly
 // 把 calc 做 input ??
+// -5 = ERR
 
 
 // functional programing?

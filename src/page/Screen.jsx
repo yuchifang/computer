@@ -49,7 +49,7 @@ const WScreenControlBox = styled.div`
 `
 
 const WDisplayScreen = styled.span`
-    min-height: 22px;
+    min-height: 24px;
     float: right;
     display:block;
     color:${color.displayColor};
@@ -60,7 +60,7 @@ const WDisplayScreen = styled.span`
     z-index: 0;
     position: relative;
     min-width:380px;
-    padding:2px 5px;
+    padding:3px 5px;
 `
 
 const WCalculatorScreen = styled.span`
@@ -75,5 +75,5 @@ const WCalculatorScreen = styled.span`
     box-sizing: border-box;
     min-width:380px;
     padding:0px 5px;
-    top:1px;
+    top:8px;
 `

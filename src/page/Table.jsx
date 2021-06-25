@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import KeyBoard from './KeyBoard'
 import Screen from './Screen'
+import { useOutSideClick } from '../hooks/hooks'
 
 export default function Table() {
     const [screenState, setScreenState] = useState({
@@ -11,11 +12,12 @@ export default function Table() {
         displayArray: [],
         isInitial: true
     })
+    const insideRef = useOutSideClick({ handleOutsideClick: () => setAnimationState(false) })
 
     const [animationState, setAnimationState] = useState(false)
     const [equalAnimationState, setEqualAnimationState] = useState(false)
     return (
-        <WTableBlock>
+        <WTableBlock ref={insideRef}>
             <Screen
                 animationState={animationState}
                 screenState={screenState}
@@ -35,7 +37,8 @@ export default function Table() {
 // 最後看看要怎麼處理 import 的打包
 // = 的動畫 按數字的動畫
 // 最小化 ugly
-
+// 鍵盤
+// click outside
 // functional programing?
 
 
@@ -44,7 +47,7 @@ export default function Table() {
 const WTableBlock = styled.div`
     display:grid;
     grid-template-columns: 100%;
-    grid-template-rows:100px auto;
+    grid-template-rows:110px auto;
     width:400px;
     height:500px;
     border-radius: 15px;

@@ -11,6 +11,20 @@ const fadeIn = keyframes`
   }
 `
 
+const toSmall = keyframes`
+  0%{
+    transform: translateY(20px);
+    font-size:68px
+  }
+  100% {
+    transform: translateY(0px);
+    font-size:18px
+  }
+`
+const toSmallAnimation = css`
+  animation: ${toSmall} .1s ;
+`
+
 const fadeInAnimation = css`
     animation: ${fadeIn} .2s ;
 `
@@ -25,8 +39,11 @@ export default function Screen({
     return (
         <WScreen>
             <WScreenRow>
-                <WScreenControlBox animationState={animationState}>
-                    <WDisplayScreen>
+                <WScreenControlBox
+                    animationState={animationState}>
+                    <WDisplayScreen
+                        equalAnimationState={equalAnimationState}
+                        onAnimationEnd={() => setEqualAnimationState(false)}>
                         {displayArray}
                     </WDisplayScreen>
                     <WCalculatorScreen
@@ -50,6 +67,7 @@ const WScreen = styled.div`
     display:table;
     table-layout: fixed;
 `
+
 const WScreenRow = styled.div`
     display: table-row;
     border: 2px solid rgba(0,0,0,0.3);
@@ -71,6 +89,7 @@ const WScreenControlBox = styled.div`
 `
 
 const WDisplayScreen = styled.span`
+    ${props => props.equalAnimationState ? toSmallAnimation : ""}
     min-height: 24px;
     float: right;
     display:block;
@@ -85,7 +104,6 @@ const WDisplayScreen = styled.span`
     padding:3px 5px;
 `
 
-// ${props => props.equalAnimationState ? : ""}
 const WCalculatorScreen = styled.span`
     ${props => props.equalAnimationState ? fadeInAnimation : ""}
     float: right;

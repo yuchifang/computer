@@ -140,7 +140,10 @@ export function handleFormula(controlCalcArray: string[]): boolean {
     const lastString = controlCalcArray[controlCalcArrayLength - 1]
     const lastWord = lastString[lastString.length - 1]
     const LastSecondWord = lastString[lastString.length - 2]
+    const lastStringLength = lastString.length
+
     if (calcMarkRegExp.test(lastWord)) return false
     if (lastWord === "." && calcMarkRegExp.test(LastSecondWord)) return false
+    if (lastWord === "." && controlCalcArrayLength === 1 && lastStringLength === 1) return false
     return true
 }

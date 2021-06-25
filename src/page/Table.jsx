@@ -36,12 +36,11 @@ export default function Table() {
 
 
 // 最後看看要怎麼處理 import 的打包
-// = 的動畫 按數字的動畫
 // 最小化 ugly
 // 鍵盤
 // 刪除 問題 300+3 backspace => 300+ backspace => 300 backspace => 0
 // 刪除 問題 32 + 32 = 64 , backspace =>0 
-// 0 => 3 = 03 XX 
+
 // functional programing?
 
 

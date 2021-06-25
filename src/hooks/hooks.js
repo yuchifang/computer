@@ -5,7 +5,6 @@ export function useOutSideClick({ handleOutsideClick }) {
     const wrapper = useRef(null)
     useEffect(() => {
         function outSideClick(e) {
-            console.log(e.target)
             if (!wrapper.current.contains(e.target)) {
                 handleOutsideClick?.()
             }

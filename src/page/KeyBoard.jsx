@@ -12,14 +12,15 @@ export default function KeyBoard({
 }) {
 
     const calculatorLength = calculatorArray.length
-    const lastCalcString = calculatorArray[calculatorLength - 1]
-    const lastWord = lastCalcString[lastCalcString.length - 1]
+    const lastCalcString = calculatorArray?.[calculatorLength - 1]
+    const lastWord = lastCalcString?.[lastCalcString.length - 1]
 
 
     const handleNumberClick = (e) => {
         const inputString = e.target.innerHTML
 
-        if (hasFinalValue) { // 處理是否計算完成的答案值,及初始值
+
+        if (hasFinalValue || isInitial) { // 處理是否計算完成的答案值,及初始值
             setScreenState?.(prevState => {
 
                 const prevFinalValue = prevState.finalValue
@@ -217,12 +218,41 @@ export default function KeyBoard({
 
         if (hasFinalValue) {
             setScreenState?.(prevState => {
-                return {
-                    ...prevState,
-                    displayArray: [`Ans = ${prevState.finalValue}`],
-                    isInitial: true,
-                    hasFinalValue: true,
-                    calculatorArray: ["0"],
+                const calcArray = [...calculatorArray]
+                // const calcArrayLength = calcArray.length
+                const lastString = calcArray.pop()
+                const lastStringLength = lastString.length
+
+                if (calcArray.length === 0 && lastStringLength === 1) {
+                    return {
+                        ...prevState,
+                        displayArray: [`Ans = ${prevState.finalValue}`],
+                        isInitial: true,
+                        hasFinalValue: true,
+                        calculatorArray: ["0"],
+                    }
+                }
+
+                if (lastStringLength === 1) {
+                    return {
+                        ...prevState,
+                        isInitial: true,
+                        hasFinalValue: true,
+                        displayArray: [`Ans = ${prevState.finalValue}`],
+                        calculatorArray: calcArray,
+                    }
+                }
+
+                if (lastStringLength > 1) {
+                    const newString = lastString.slice(0, lastStringLength - 1)
+                    calcArray.push(newString)
+                    return {
+                        ...prevState,
+                        isInitial: true,
+                        hasFinalValue: true,
+                        displayArray: [`Ans = ${prevState.finalValue}`],
+                        calculatorArray: calcArray,
+                    }
                 }
             })
             return
@@ -230,16 +260,24 @@ export default function KeyBoard({
 
 
         setScreenState?.(prevState => {
-            const calcArray = prevState.calculatorArray
+            const calcArray = [...calculatorArray]
+            // const calcArrayLength = calcArray.length
             const lastString = calcArray.pop()
             const lastStringLength = lastString.length
 
-            if (calcArray.length === 0) {
+            if (calcArray.length === 0 && lastStringLength === 1) {
                 return {
                     ...prevState,
                     isInitial: true,
                     hasFinalValue: true,
                     calculatorArray: ["0"],
+                }
+            }
+
+            if (lastStringLength === 1) {
+                return {
+                    ...prevState,
+                    calculatorArray: calcArray,
                 }
             }
 
@@ -252,10 +290,7 @@ export default function KeyBoard({
                 }
             }
 
-            return {
-                ...prevState,
-                calculatorArray: calcArray,
-            }
+
 
         })
 
@@ -374,6 +409,8 @@ export default function KeyBoard({
                 ⌫
             </WDeleteNumberClickBlock>
             <WEqualClickBlock
+                onMouseDown={() => setAnimationState(false)}
+                onMouseUp={() => setAnimationState(true)}
                 onClick={() => {
                     setEqualAnimationState(true)
                     handleEqualClick()

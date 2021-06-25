@@ -1,7 +1,27 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import color from '../style/style'
-export default function Screen({ screenState: { calculatorArray, displayArray }, animationState }) {
+
+const fadeIn = keyframes`
+  0% {
+    transform: translateY(80px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+`
+
+const fadeInAnimation = css`
+    animation: ${fadeIn} .2s ;
+`
+
+export default function Screen({
+    screenState: { calculatorArray, displayArray },
+    animationState,
+    setEqualAnimationState,
+    equalAnimationState
+}) {
+
     return (
         <WScreen>
             <WScreenRow>
@@ -9,7 +29,9 @@ export default function Screen({ screenState: { calculatorArray, displayArray },
                     <WDisplayScreen>
                         {displayArray}
                     </WDisplayScreen>
-                    <WCalculatorScreen>
+                    <WCalculatorScreen
+                        equalAnimationState={equalAnimationState}
+                        onAnimationEnd={() => setEqualAnimationState(false)} >
                         {calculatorArray}
                     </WCalculatorScreen>
                 </WScreenControlBox>
@@ -63,9 +85,11 @@ const WDisplayScreen = styled.span`
     padding:3px 5px;
 `
 
+// ${props => props.equalAnimationState ? : ""}
 const WCalculatorScreen = styled.span`
+    ${props => props.equalAnimationState ? fadeInAnimation : ""}
     float: right;
-    display:block;
+    display: block;
     font-size: 67px;
     line-height: 67px;
     color:#fff;
@@ -73,7 +97,7 @@ const WCalculatorScreen = styled.span`
     z-index: 0;
     position: relative;
     box-sizing: border-box;
-    min-width:380px;
-    padding:0px 5px;
-    top:8px;
+    min-width: 380px;
+    padding: 0px 5px;
+    top: 8px;
 `

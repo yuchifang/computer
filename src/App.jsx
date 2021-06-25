@@ -15,17 +15,6 @@ export default function App() {
 */
 
 
-/*
-
-let arr = ["1.0", "-2"].map(Number)//.join("")
-let total = 0
-arr.forEach(item => {
-    switch 
-    total += item
-})
-console.log(total)
-
-*/
 
 const WContainer = styled.div`
     display:flex;

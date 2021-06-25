@@ -374,9 +374,8 @@ export default function KeyBoard({
                 ⌫
             </WDeleteNumberClickBlock>
             <WEqualClickBlock
-                //setEqualAnimationState
                 onClick={() => {
-                    setEqualAnimationState()
+                    setEqualAnimationState(true)
                     handleEqualClick()
                     return
                 }}>

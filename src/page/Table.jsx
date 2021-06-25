@@ -21,7 +21,8 @@ export default function Table() {
             <Screen
                 animationState={animationState}
                 screenState={screenState}
-                equalAnimationState={equalAnimationState} />
+                equalAnimationState={equalAnimationState}
+                setEqualAnimationState={setEqualAnimationState} />
             <KeyBoard
                 setScreenState={setScreenState}
                 setEqualAnimationState={setEqualAnimationState}
@@ -38,7 +39,9 @@ export default function Table() {
 // = 的動畫 按數字的動畫
 // 最小化 ugly
 // 鍵盤
-// click outside
+// 刪除 問題 300+3 backspace => 300+ backspace => 300 backspace => 0
+// 刪除 問題 32 + 32 = 64 , backspace =>0 
+// 0 => 3 = 03 XX 
 // functional programing?
 
 

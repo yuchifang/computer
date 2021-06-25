@@ -12,12 +12,13 @@ export default function Table() {
         displayArray: [],
         isInitial: true
     })
-    const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined })
 
     const insideRef = useOutSideClick({ handleOutsideClick: () => setAnimationState(false) })
-    const [animationState, setAnimationState] = useState(false)
-    const [equalAnimationState, setEqualAnimationState] = useState(false)
 
+    const [equalAnimationState, setEqualAnimationState] = useState(false)
+    const [animationState, setAnimationState] = useState(false)
+
+    const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined })
 
     const handleOnKeyDown = (e) => {
         const newKey = e.key
@@ -26,7 +27,6 @@ export default function Table() {
             return
         }
     }
-
     return (
         <WTableBlock
             ref={insideRef}
@@ -51,13 +51,9 @@ export default function Table() {
 
 
 
-// 0 * 5 * - 8 -1 = NAN
 // 最後看看要怎麼處理 import 的打包
 // 最小化 ugly
 // 把 calc 做 input ??
-// -5 = ERR
-
-
 // functional programing?
 
 

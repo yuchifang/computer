@@ -18,24 +18,24 @@ export function decimalControl({ inputString, lastCalcString }:
     return lastCalcString + inputString
 }
 
-export function calcMarkControl({ inputMarkString, lastWord, calculatorArray }: {
-    inputMarkString: string, lastWord: string, calculatorArray: string[]
+export function calcMarkControl({ inputMarkString, calcArrayLastWord, calculatorArray }: {
+    inputMarkString: string, calcArrayLastWord: string, calculatorArray: string[]
 }): string {
-    if (/\÷|\×/.test(lastWord) && inputMarkString === "-") return "normal"
+    if (/\÷|\×/.test(calcArrayLastWord) && inputMarkString === "-") return "normal"
     // 特別判斷負號 //3*-3
-    if (lastWord === inputMarkString) {
+    if (calcArrayLastWord === inputMarkString) {
         return "noChange"
     }
 
-    if (calcMarkRegExp.test(lastWord)) { // 是運算符號
+    if (calcMarkRegExp.test(calcArrayLastWord)) { // 是運算符號
         return "change"
     }
 
-    if (lastWord === '-') return "noChange"
+    if (calcArrayLastWord === '-') return "noChange"
 
     if (calcMarkRegExp.test(inputMarkString) &&
         calculatorArray.length === 1 &&
-        lastWord === "." &&
+        calcArrayLastWord === "." &&
         calculatorArray[0].length === 1) return "noChange"
     //.+3 = error
     return "normal"

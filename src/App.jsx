@@ -9,12 +9,6 @@ export default function App() {
         </WContainer>
     )
 }
-/*
-    安按鍵有聲音
-    支援鍵盤
-*/
-
-
 
 const WContainer = styled.div`
     display:flex;

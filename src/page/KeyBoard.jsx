@@ -52,17 +52,29 @@ export default function KeyBoard({
 
     }, [keyBoardKey])
 
-    const calculatorLength = calculatorArray.length
-    const lastCalcString = calculatorArray?.[calculatorLength - 1]
-    const lastWord = lastCalcString?.[lastCalcString.length - 1]
-
-
+    const lastCalcString = calculatorArray?.[calculatorArray.length - 1]
+    const calcArrayLastWord = lastCalcString?.[lastCalcString.length - 1]
 
     const handleNumberClick = (e) => {
         const inputString = e?.target?.innerHTML || e
 
+        if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(""))) {// 如果全是0 則取代
+            setScreenState?.(prevState => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = "Ans = " + prevFinalValue
+                return {
+                    ...prevState,
+                    isInitial: false,
+                    hasFinalValue: false,
+                    calculatorArray: [inputString],
+                    displayArray: [displayString]
+                }
+            })
 
-        if (hasFinalValue || isInitial) { // 處理是否計算完成的答案值,及初始值
+            return
+        }
+
+        if (hasFinalValue) { // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
             setScreenState?.(prevState => {
 
                 const prevFinalValue = prevState.finalValue
@@ -79,7 +91,7 @@ export default function KeyBoard({
 
             return
         }
-
+        // 十進位
         const returnTotal = decimalControl({ inputString, lastCalcString })
         setScreenState?.(prevState => {
             let state = prevState.calculatorArray
@@ -110,9 +122,10 @@ export default function KeyBoard({
             return
         }
 
-        if (isInitial) return
+        if (isInitial) return // 如果有初始值 不更新
 
-        const markRelation = calcMarkControl({ inputMarkString, lastWord, calculatorArray })
+        // 處理 是否需要換 運算符號 
+        const markRelation = calcMarkControl({ inputMarkString, calcArrayLastWord, calculatorArray })
 
         if (markRelation === "noChange") {
             return
@@ -145,7 +158,7 @@ export default function KeyBoard({
 
     const handleSubtractClick = (e) => {
         const subtractString = e?.target?.innerHTML || e
-        const markRelation = calcMarkControl({ inputMarkString: subtractString, lastWord, calculatorArray })
+        const markRelation = calcMarkControl({ inputMarkString: subtractString, calcArrayLastWord, calculatorArray })
         if (markRelation === "noChange") return
 
 
@@ -155,7 +168,6 @@ export default function KeyBoard({
                 state.pop()
                 return {
                     ...prevState,
-                    finalValue: null,
                     hasFinalValue: false,
                     calculatorArray: [...state, subtractString]
                 }
@@ -185,7 +197,6 @@ export default function KeyBoard({
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
-                    finalValue: null,
                     hasFinalValue: false,
                     displayArray: [displayString],
                     calculatorArray: [...prevState.calculatorArray, subtractString]
@@ -208,11 +219,11 @@ export default function KeyBoard({
     const handleEqualClick = () => {
 
         const controlCalcArray = [...calculatorArray]
-        const isCompleteFormula = handleFormula(controlCalcArray)
+        const isCompleteFormula = handleFormula(controlCalcArray) // 算是是否完成
         if (!isCompleteFormula) return
 
-        const returnArr = handlePriorityCalc(controlCalcArray)
-        const answerString = handleNormalCalc(returnArr)
+        const returnArr = handlePriorityCalc(controlCalcArray) //優先處理"*" "/＂
+        const answerString = handleNormalCalc(returnArr)　//處理 + - 
         const displayString = calculatorArray.join("").split("").join("")
 
         setScreenState?.((prevState) => {
@@ -261,11 +272,10 @@ export default function KeyBoard({
         if (hasFinalValue) {
             setScreenState?.(prevState => {
                 const calcArray = [...calculatorArray]
-                // const calcArrayLength = calcArray.length
                 const lastString = calcArray.pop()
                 const lastStringLength = lastString.length
 
-                if (calcArray.length === 0 && lastStringLength === 1) {
+                if (calcArray.length === 0 && lastStringLength === 1) { // deal final array string
                     return {
                         ...prevState,
                         displayArray: [`Ans = ${prevState.finalValue}`],
@@ -303,7 +313,6 @@ export default function KeyBoard({
 
         setScreenState?.(prevState => {
             const calcArray = [...calculatorArray]
-            // const calcArrayLength = calcArray.length
             const lastString = calcArray.pop()
             const lastStringLength = lastString.length
 
@@ -332,14 +341,11 @@ export default function KeyBoard({
                 }
             }
 
-
-
         })
 
 
 
     }
-    // handleOnKeyDown()
     return (
         <WKeyBoard>
             <WSevenClickBlock

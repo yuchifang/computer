@@ -17,5 +17,3 @@ export function useOutSideClick({ handleOutsideClick }) {
     }, [wrapper])
     return wrapper
 }
-// 點擊 位置
-// 是否在 頁面範圍

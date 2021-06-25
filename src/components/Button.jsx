@@ -8,6 +8,9 @@ const Button = styled.button`
    &:hover{
         border: 3px solid rgba(0,0,0, 0.3);
    }
+   &:focus{
+     outline:none;
+ }
 `
 export default Button
 

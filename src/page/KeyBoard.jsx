@@ -1,23 +1,65 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
 import { decimalControl, calcMarkControl, handleNormalCalc, handlePriorityCalc, handleFormula } from '../util'
 
 export default function KeyBoard({
+    keyBoardKey,
     setAnimationState,
     setEqualAnimationState,
     setScreenState,
     screenState: { calculatorArray, displayArray, finalValue, hasFinalValue, isInitial }
 }) {
 
+
+    useEffect(() => {
+        const key = keyBoardKey.newKey
+
+        if (key === undefined) return
+
+        if (/[0-9\.]/.test(key)) {
+            handleNumberClick(key)
+            setAnimationState(true)
+            return
+        }
+
+        if (/[\+\*\/+]/.test(key)) {
+            setAnimationState(true)
+            if (/\*/.test(key)) return handleCalcMarkClick('×')
+            if (/\//.test(key)) return handleCalcMarkClick('÷')
+            handleCalcMarkClick('+')
+            return
+        }
+
+        if (/\-/.test(key)) {
+            setAnimationState(true)
+            handleSubtractClick('-')
+            return
+        }
+
+        if (/\=/.test(key)) {
+            setEqualAnimationState(true)
+            handleEqualClick()
+            return
+        }
+
+        if (/Backspace/.test(key)) {
+            setAnimationState(true)
+            handleBackSpaceClick()
+            return
+        }
+
+    }, [keyBoardKey])
+
     const calculatorLength = calculatorArray.length
     const lastCalcString = calculatorArray?.[calculatorLength - 1]
     const lastWord = lastCalcString?.[lastCalcString.length - 1]
 
 
+
     const handleNumberClick = (e) => {
-        const inputString = e.target.innerHTML
+        const inputString = e?.target?.innerHTML || e
 
 
         if (hasFinalValue || isInitial) { // 處理是否計算完成的答案值,及初始值
@@ -51,7 +93,7 @@ export default function KeyBoard({
     }
 
     const handleCalcMarkClick = (e) => {
-        const inputMarkString = e.target.innerHTML
+        const inputMarkString = e?.target?.innerHTML || e
 
         if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
             setScreenState?.(prevState => {
@@ -102,7 +144,7 @@ export default function KeyBoard({
     }
 
     const handleSubtractClick = (e) => {
-        const subtractString = e.target.innerHTML
+        const subtractString = e?.target?.innerHTML || e
         const markRelation = calcMarkControl({ inputMarkString: subtractString, lastWord, calculatorArray })
         if (markRelation === "noChange") return
 
@@ -297,13 +339,14 @@ export default function KeyBoard({
 
 
     }
-
+    // handleOnKeyDown()
     return (
         <WKeyBoard>
             <WSevenClickBlock
                 onMouseDown={() => setAnimationState(false)}
                 onMouseUp={() => setAnimationState(true)}
-                onClick={handleNumberClick}>
+                onClick={handleNumberClick}
+            >
                 7
             </WSevenClickBlock>
             <WEightClickBlock

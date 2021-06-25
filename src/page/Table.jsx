@@ -12,18 +12,34 @@ export default function Table() {
         displayArray: [],
         isInitial: true
     })
-    const insideRef = useOutSideClick({ handleOutsideClick: () => setAnimationState(false) })
+    const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined })
 
+    const insideRef = useOutSideClick({ handleOutsideClick: () => setAnimationState(false) })
     const [animationState, setAnimationState] = useState(false)
     const [equalAnimationState, setEqualAnimationState] = useState(false)
+
+
+    const handleOnKeyDown = (e) => {
+        const newKey = e.key
+        if (/Backspace|[0-9\=\+\/\-\*\.]/.test(newKey)) {
+            setKeyBoardKey({ "newKey": newKey })
+            return
+        }
+    }
+
     return (
-        <WTableBlock ref={insideRef}>
+        <WTableBlock
+            ref={insideRef}
+            tabIndex="0"
+            onKeyDown={handleOnKeyDown}
+        >
             <Screen
                 animationState={animationState}
                 screenState={screenState}
                 equalAnimationState={equalAnimationState}
                 setEqualAnimationState={setEqualAnimationState} />
             <KeyBoard
+                keyBoardKey={keyBoardKey}
                 setScreenState={setScreenState}
                 setEqualAnimationState={setEqualAnimationState}
                 setAnimationState={setAnimationState}
@@ -35,11 +51,11 @@ export default function Table() {
 
 
 
+// 0 * 5 * - 8 -1 = NAN
 // 最後看看要怎麼處理 import 的打包
 // 最小化 ugly
-// 鍵盤
-// 刪除 問題 300+3 backspace => 300+ backspace => 300 backspace => 0
-// 刪除 問題 32 + 32 = 64 , backspace =>0 
+// 把 calc 做 input ??
+
 
 // functional programing?
 
@@ -54,5 +70,8 @@ const WTableBlock = styled.div`
     height:500px;
     border-radius: 15px;
     overflow: hidden;
+    &:focus{
+        outline:none;
+    }
 `
 

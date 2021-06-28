@@ -1,5 +1,4 @@
 const path = require('path')
-const fs = require('fs')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack');
@@ -7,35 +6,11 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin")
 // const SMP = new SpeedMeasurePlugin()
-const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
+
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
-const files = fs.readdirSync(path.resolve(__dirname, './dll'));
 
-const plugins = [
-    new BundleAnalyzerPlugin({
-        analyzerMode: "server",
-        analyzerHost: "127.0.0.1",
-    }),
-    isDevelopment && new webpack.HotModuleReplacementPlugin(),
-    isDevelopment && new ReactRefreshWebpackPlugin(),
-    new HtmlWebpackPlugin({ template: './index.html' }),
-].filter(Boolean)
-
-files.forEach(file => {
-
-    if (/.*\.dll.js/.test(file)) {
-        plugins.push(new AddAssetHtmlWebpackPlugin({
-            filepath: path.resolve(__dirname, './dll', file)
-        }))
-    }
-    if (/.*\.manifest.json/.test(file)) {
-        plugins.push(new webpack.DllReferencePlugin({
-            manifest: path.resolve(__dirname, './dll', file)
-        }))
-    }
-})
 
 // module.exports= SMP.wrap({})
 module.exports = {
@@ -96,5 +71,13 @@ module.exports = {
             }
         ]
     },
-    plugins
+    plugins: [
+        new BundleAnalyzerPlugin({
+            analyzerMode: "server",
+            analyzerHost: "127.0.0.1",
+        }),
+        isDevelopment && new webpack.HotModuleReplacementPlugin(),
+        isDevelopment && new ReactRefreshWebpackPlugin(),
+        new HtmlWebpackPlugin({ template: './index.html' }),
+    ].filter(Boolean)
 }

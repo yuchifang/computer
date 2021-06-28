@@ -60,11 +60,7 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ['@babel/preset-react',
-                            [
-                                '@babel/preset-env'
-                                , { useBuiltIns: "usage", "corejs": '3.0.0' }
-                            ]],
+                        presets: ['@babel/preset-react', '@babel/preset-env'],
                         plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean),
                     }
                 }

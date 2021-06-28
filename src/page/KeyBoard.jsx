@@ -9,7 +9,7 @@ export default function KeyBoard({
     setAnimationState,
     setEqualAnimationState,
     setScreenState,
-    screenState: { calculatorArray, displayArray, finalValue, hasFinalValue, isInitial }
+    screenState: { calculatorArray, displayArray, finalValue, hasAnswer }
 }) {
 
 
@@ -64,8 +64,8 @@ export default function KeyBoard({
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
-                    isInitial: false,
-                    hasFinalValue: false,
+
+                    hasAnswer: false,
                     calculatorArray: [inputString],
                     displayArray: [displayString]
                 }
@@ -74,7 +74,7 @@ export default function KeyBoard({
             return
         }
 
-        if (hasFinalValue) { // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
+        if (hasAnswer) { // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
             setScreenState?.(prevState => {
 
                 const prevFinalValue = prevState.finalValue
@@ -82,8 +82,8 @@ export default function KeyBoard({
 
                 return {
                     ...prevState,
-                    isInitial: false,
-                    hasFinalValue: false,
+
+                    hasAnswer: false,
                     calculatorArray: [inputString],
                     displayArray: [displayString]
                 }
@@ -98,7 +98,7 @@ export default function KeyBoard({
             state.pop()
             return {
                 ...prevState,
-                isInitial: false,
+
                 calculatorArray: [...state, returnTotal]
             }
         })
@@ -107,14 +107,14 @@ export default function KeyBoard({
     const handleCalcMarkClick = (e) => {
         const inputMarkString = e?.target?.innerHTML || e
 
-        if (hasFinalValue) { // 處理有Ans displayScreen 的顯示
+        if (hasAnswer) { // 處理有Ans displayScreen 的顯示
             setScreenState?.(prevState => {
                 const prevFinalValue = prevState.finalValue
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
-                    hasFinalValue: false,
-                    isInitial: false,
+                    hasAnswer: false,
+
                     displayArray: [displayString],
                     calculatorArray: [...prevState.calculatorArray, inputMarkString]
                 }
@@ -137,8 +137,8 @@ export default function KeyBoard({
                 state.pop()
                 return {
                     ...prevState,
-                    hasFinalValue: false,
-                    isInitial: false,
+                    hasAnswer: false,
+
                     calculatorArray: [...state, inputMarkString]
                 }
             })
@@ -168,36 +168,20 @@ export default function KeyBoard({
                 state.pop()
                 return {
                     ...prevState,
-                    hasFinalValue: false,
+                    hasAnswer: false,
                     calculatorArray: [...state, subtractString]
                 }
             })
             return
         }
 
-        if (isInitial) { // 處理是否計算完成的答案值,及初始值
-            setScreenState?.(prevState => {
-
-                const prevFinalValue = prevState.finalValue
-                const displayString = "Ans = " + prevFinalValue
-
-                return {
-                    ...prevState,
-                    hasFinalValue: false,
-                    calculatorArray: [subtractString],
-                    displayArray: [displayString]
-                }
-            })
-            return
-        }
-
-        if (hasFinalValue) {
+        if (hasAnswer) {
             setScreenState?.(prevState => {
                 const prevFinalValue = prevState.finalValue
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
-                    hasFinalValue: false,
+                    hasAnswer: false,
                     displayArray: [displayString],
                     calculatorArray: [...prevState.calculatorArray, subtractString]
                 }
@@ -230,8 +214,8 @@ export default function KeyBoard({
             return {
                 ...prevState,
                 finalValue: answerString,
-                hasFinalValue: true,
-                isInitial: false,
+                hasAnswer: true,
+
                 calculatorArray: [answerString],
                 displayArray: [`${displayString} = `]
             }
@@ -240,16 +224,15 @@ export default function KeyBoard({
     }
 
     const handleACClick = () => {
-        if (hasFinalValue) {
+        if (hasAnswer) {
             setScreenState?.(prevState => {
                 const prevFinalValue = prevState.finalValue
                 const displayString = "Ans = " + prevFinalValue
                 return {
                     ...prevState,
                     finalValue: prevState.finalValue,
-                    isInitial: true,
                     calculatorArray: ["0"],
-                    hasFinalValue: true,
+                    hasAnswer: true,
                     displayArray: [displayString],
                 }
             })
@@ -260,8 +243,7 @@ export default function KeyBoard({
             return {
                 ...prevState,
                 finalValue: prevState.finalValue,
-                hasFinalValue: true,
-                isInitial: true,
+                hasAnswer: true,
                 calculatorArray: ["0"],
             }
         })
@@ -269,7 +251,7 @@ export default function KeyBoard({
 
     const handleBackSpaceClick = () => {
 
-        if (hasFinalValue) {
+        if (hasAnswer) {
             setScreenState?.(prevState => {
                 const calcArray = [...calculatorArray]
                 const lastString = calcArray.pop()
@@ -279,8 +261,7 @@ export default function KeyBoard({
                     return {
                         ...prevState,
                         displayArray: [`Ans = ${prevState.finalValue}`],
-                        isInitial: true,
-                        hasFinalValue: true,
+                        hasAnswer: true,
                         calculatorArray: ["0"],
                     }
                 }
@@ -288,8 +269,7 @@ export default function KeyBoard({
                 if (lastStringLength === 1) {
                     return {
                         ...prevState,
-                        isInitial: true,
-                        hasFinalValue: true,
+                        hasAnswer: true,
                         displayArray: [`Ans = ${prevState.finalValue}`],
                         calculatorArray: calcArray,
                     }
@@ -300,8 +280,7 @@ export default function KeyBoard({
                     calcArray.push(newString)
                     return {
                         ...prevState,
-                        isInitial: true,
-                        hasFinalValue: true,
+                        hasAnswer: true,
                         displayArray: [`Ans = ${prevState.finalValue}`],
                         calculatorArray: calcArray,
                     }
@@ -319,8 +298,7 @@ export default function KeyBoard({
             if (calcArray.length === 0 && lastStringLength === 1) {
                 return {
                     ...prevState,
-                    isInitial: true,
-                    hasFinalValue: true,
+                    hasAnswer: true,
                     calculatorArray: ["0"],
                 }
             }

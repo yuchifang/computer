@@ -7,10 +7,9 @@ import { useOutSideClick } from '../hooks/hooks'
 export default function Table() {
     const [screenState, setScreenState] = useState({
         finalValue: "0",  // 表示計算完 的值 或初始值
-        hasFinalValue: true,
+        hasAnswer: true,
         calculatorArray: ["0"],
         displayArray: [],
-        isInitial: true
     })
 
     const insideRef = useOutSideClick({ handleOutsideClick: () => setAnimationState(false) })
@@ -30,7 +29,7 @@ export default function Table() {
     return (
         <WTableBlock
             ref={insideRef}
-            tabIndex="0"
+            tabIndex={0}
             onKeyDown={handleOnKeyDown}
         >
             <Screen
@@ -51,9 +50,7 @@ export default function Table() {
 
 
 
-// 看看 finalValue 跟 initial 差異
 // 結束 看看要不要用個 webpack 用個 prod dev 版
-// 看看 resolve 
 // github 發佈
 
 

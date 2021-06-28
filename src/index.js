@@ -10,9 +10,4 @@ const GlobalStyle = createGlobalStyle`
     }
 `
 
-ReactDOM.render(
-    <>
-        <App />
-        <GlobalStyle />
-    </>
-    , document.getElementById("root"))
+ReactDOM.render(<><App /><GlobalStyle />   </>, document.getElementById("root"))

@@ -51,10 +51,11 @@ export default function Table() {
 
 
 
-// 最後看看要怎麼處理 import 的打包
-// 最小化 ugly
-// 把 calc 做 input ??
-// functional programing?
+// 看看 finalValue 跟 initial 差異
+// 結束 看看要不要用個 webpack 用個 prod dev 版
+// 看看 resolve 
+// github 發佈
+
 
 
 

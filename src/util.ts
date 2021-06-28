@@ -1,3 +1,10 @@
+let promise = new Promise((resolve, reject) => {
+    resolve(5)
+})
+promise.then((res) => {
+    console.log(res)
+})
+
 
 const calcMarkRegExp = new RegExp(/\÷|\×|\+|\-/)
 export function hasPoint(string: string): boolean {

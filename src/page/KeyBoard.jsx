@@ -122,7 +122,7 @@ export default function KeyBoard({
             return
         }
 
-        if (isInitial) return // 如果有初始值 不更新
+        // if (isInitial) return alert("something") // 如果有初始值 不更新
 
         // 處理 是否需要換 運算符號 
         const markRelation = calcMarkControl({ inputMarkString, calcArrayLastWord, calculatorArray })
@@ -137,7 +137,6 @@ export default function KeyBoard({
                 state.pop()
                 return {
                     ...prevState,
-                    finalValue: null,
                     hasFinalValue: false,
                     isInitial: false,
                     calculatorArray: [...state, inputMarkString]
@@ -159,6 +158,7 @@ export default function KeyBoard({
     const handleSubtractClick = (e) => {
         const subtractString = e?.target?.innerHTML || e
         const markRelation = calcMarkControl({ inputMarkString: subtractString, calcArrayLastWord, calculatorArray })
+
         if (markRelation === "noChange") return
 
 

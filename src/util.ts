@@ -8,7 +8,7 @@ export function decimalControl({
   lastCalcString,
 }: {
   inputString: string;
-  lastCalcString: string;
+    lastCalcString: string;
 }): string {
   if (inputString === '.' && hasPoint(lastCalcString)) {
     return lastCalcString;

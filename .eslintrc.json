@@ -5,14 +5,18 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "airbnb"
-    ],
+        "airbnb",
+        "prettier",
+        "plugin:@typescript-eslint/recommended",
+        "prettier",
+        "plugin:prettier/recommended",
+        ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": "latest",
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
     "plugins": [

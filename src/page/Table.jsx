@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
 import KeyBoard from './KeyBoard';
-import Screen from './Screen';
+import Screen from './Screen.tsx';
 import { useOutSideClick } from '../hooks/hooks';
 
 const WTableBlock = styled.div`
@@ -36,6 +36,7 @@ export default function Table() {
 
   const handleOnKeyDownIsVaild = (e) => {
     const newKey = e.key;
+    // eslint-disable-next-line no-useless-escape
     if (/Backspace|[0-9\=\+\/\-\*\.]/.test(newKey)) {
       setKeyBoardKey({ newKey });
     }

@@ -1,31 +1,30 @@
-import React, { useState,useMemo } from "react";
-import styled from "styled-components";
-import KeyBoard from "./KeyBoard";
-import Screen from "./Screen";
-import { useOutSideClick } from "../hooks/hooks";
+import React, { useState, useMemo } from 'react';
+import styled from 'styled-components';
+import KeyBoard from './KeyBoard';
+import Screen from './Screen';
+import { useOutSideClick } from '../hooks/hooks';
 
 export default function Table() {
   const [screenState, setScreenState] = useState({
-    finalValue: "0", // 表示計算完 的值 或初始值
+    finalValue: '0', // 表示計算完 的值 或初始值
     hasAnswer: true,
-    calculatorArray: ["0"],
+    calculatorArray: ['0'],
     displayArray: [],
-  });
-
-  const insideRef = useOutSideClick({
-    handleOutsideClick: () => setAnimationState(false),
   });
 
   const [equalAnimationState, setEqualAnimationState] = useState(false); // todo
   const [animationState, setAnimationState] = useState(false); // todo
+
+  const insideRef = useOutSideClick({
+    handleOutsideClick: () => setAnimationState(false),
+  });
 
   const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined }); //
 
   const handleOnKeyDownIsVaild = (e) => {
     const newKey = e.key;
     if (/Backspace|[0-9\=\+\/\-\*\.]/.test(newKey)) {
-      setKeyBoardKey({ newKey: newKey });
-      return;
+      setKeyBoardKey({ newKey });
     }
   };
 
@@ -38,7 +37,7 @@ export default function Table() {
         setEqualAnimationState={setEqualAnimationState}
       />
     ),
-    []
+    [],
   );
   return (
     <WTableBlock

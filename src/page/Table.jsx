@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useMemo } from "react";
 import styled from "styled-components";
 import KeyBoard from "./KeyBoard";
 import Screen from "./Screen";
@@ -16,26 +16,37 @@ export default function Table() {
     handleOutsideClick: () => setAnimationState(false),
   });
 
-  const [equalAnimationState, setEqualAnimationState] = useState(false);
-  const [animationState, setAnimationState] = useState(false);
+  const [equalAnimationState, setEqualAnimationState] = useState(false); // todo
+  const [animationState, setAnimationState] = useState(false); // todo
 
-  const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined });
+  const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined }); //
 
-  const handleOnKeyDown = (e) => {
+  const handleOnKeyDownIsVaild = (e) => {
     const newKey = e.key;
     if (/Backspace|[0-9\=\+\/\-\*\.]/.test(newKey)) {
       setKeyBoardKey({ newKey: newKey });
       return;
     }
   };
-  return (
-    <WTableBlock ref={insideRef} tabIndex={0} onKeyDown={handleOnKeyDown}>
+
+  const renderScreen = useMemo(
+    () => (
       <Screen
         animationState={animationState}
         screenState={screenState}
         equalAnimationState={equalAnimationState}
         setEqualAnimationState={setEqualAnimationState}
       />
+    ),
+    []
+  );
+  return (
+    <WTableBlock
+      ref={insideRef}
+      tabIndex={0}
+      onKeyDown={handleOnKeyDownIsVaild}
+    >
+      {renderScreen}
       <KeyBoard
         keyBoardKey={keyBoardKey}
         setScreenState={setScreenState}

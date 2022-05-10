@@ -425,7 +425,7 @@ export default function KeyBoard({
 
   const handleBackSpaceClick = useCallback(() => {
     if (hasAnswer) {
-      setScreenState?.((prevState) => {
+      return setScreenState?.((prevState) => {
         const calcArray = [...calculatorArray];
         const lastString = calcArray.pop();
         const lastStringLength = (lastString as string).length;
@@ -459,10 +459,11 @@ export default function KeyBoard({
             calculatorArray: calcArray,
           };
         }
+        return prevState;
       });
     }
 
-    setScreenState?.((prevState) => {
+    return setScreenState?.((prevState) => {
       const calcArray = [...calculatorArray];
       const lastString = calcArray.pop();
       const lastStringLength = (lastString as string).length;
@@ -499,6 +500,7 @@ export default function KeyBoard({
 
     if (key === undefined) return;
 
+    // eslint-disable-next-line no-useless-escape
     if (/[0-9\.]/.test(key)) {
       handleNumberClick(key);
       setAnimationState(true);

@@ -47,7 +47,7 @@ const WScreenRow = styled.div`
   width: 100%;
 `;
 
-const WScreenControlBox = styled.div`
+const WScreenControlBox = styled.div<{animationState:boolean}>`
   border: solid 2px transparent;
   ${(props) => (props.animationState ? 'border: solid 2px rgba(0,0,0,0.3);' : '')}
   display:table-cell;
@@ -59,7 +59,7 @@ const WScreenControlBox = styled.div`
   border-radius: 5px 5px 0 0;
 `;
 
-const WDisplayScreen = styled.span`
+const WDisplayScreen = styled.span<{equalAnimationState:boolean}>`
   ${(props) => (props.equalAnimationState ? toSmallAnimation : '')}
   min-height: 24px;
   float: right;
@@ -75,7 +75,7 @@ const WDisplayScreen = styled.span`
   padding: 3px 5px;
 `;
 
-const WCalculatorScreen = styled.span`
+const WCalculatorScreen = styled.span<{equalAnimationState:boolean}>`
   ${(props) => (props.equalAnimationState ? fadeInAnimation : '')}
   float: right;
   display: block;
@@ -91,12 +91,19 @@ const WCalculatorScreen = styled.span`
   top: 8px;
 `;
 
+interface IScreen {
+  screenState: { calculatorArray:string[], displayArray:[] }
+  animationState: boolean;
+  setEqualAnimationState: React.Dispatch<React.SetStateAction<boolean>>;
+  equalAnimationState: boolean;
+}
+
 export default function Screen({
   screenState: { calculatorArray, displayArray },
   animationState,
   setEqualAnimationState,
   equalAnimationState,
-}) {
+}:IScreen) {
   return (
     <WScreen>
       <WScreenRow>

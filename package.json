@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack",
     "fast": "cross-env NODE_ENV=development webpack serve",
-    "build": "cross-env NODE_ENV=production webpack"
+    "build": "cross-env NODE_ENV=production webpack",
+    "format": "prettier --write \"./**/*.{js,jsx,ts,tsx}\""
   },
   "keywords": [],
   "author": "",
@@ -37,6 +38,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "core-js": "^3.15.1"
+    "core-js": "^3.15.1",
+    "prettier": "^2.6.2"
   }
 }

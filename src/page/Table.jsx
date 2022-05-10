@@ -4,6 +4,19 @@ import KeyBoard from './KeyBoard';
 import Screen from './Screen';
 import { useOutSideClick } from '../hooks/hooks';
 
+const WTableBlock = styled.div`
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 110px auto;
+  width: 400px;
+  height: 500px;
+  border-radius: 15px;
+  overflow: hidden;
+  &:focus {
+    outline: none;
+  }
+`;
+
 export default function Table() {
   const [screenState, setScreenState] = useState({
     finalValue: '0', // 表示計算完 的值 或初始值
@@ -37,8 +50,9 @@ export default function Table() {
         setEqualAnimationState={setEqualAnimationState}
       />
     ),
-    [],
+    [animationState, equalAnimationState, screenState],
   );
+
   return (
     <WTableBlock
       ref={insideRef}
@@ -56,19 +70,3 @@ export default function Table() {
     </WTableBlock>
   );
 }
-
-// 結束 看看要不要用個 webpack 用個 prod dev 版
-// github 發佈
-
-const WTableBlock = styled.div`
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 110px auto;
-  width: 400px;
-  height: 500px;
-  border-radius: 15px;
-  overflow: hidden;
-  &:focus {
-    outline: none;
-  }
-`;

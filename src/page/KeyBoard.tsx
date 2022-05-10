@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import color from '../style/style'
 import Button from '../components/Button'
@@ -11,7 +11,7 @@ import {
 } from '../util'
 
 interface IKeyBoard {
-    keyBoardKey: string
+    keyBoardKey: { newKey: string | undefined }
     setAnimationState: React.Dispatch<React.SetStateAction<boolean>>
     setEqualAnimationState: React.Dispatch<React.SetStateAction<boolean>>
     setScreenState: React.Dispatch<
@@ -237,172 +237,159 @@ export default function KeyBoard({
     const lastCalcString = calculatorArray?.[calculatorArray.length - 1]
     const calcArrayLastWord = lastCalcString?.[lastCalcString.length - 1]
 
-    const handleNumberClick = useCallback(
-        (e) => {
-            const inputString = e?.target?.innerHTML || e
+    const handleNumberClick = (e) => {
+        const inputString = e?.target?.innerHTML || e
 
-            // eslint-disable-next-line no-useless-escape
-            if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(''))) {
-                // 如果全是0 則取代
-                setScreenState?.((prevState) => {
-                    const prevFinalValue = prevState.finalValue
-                    const displayString = `Ans = ${prevFinalValue}`
-                    return {
-                        ...prevState,
+        if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(''))) {
+            // 如果全是0 則取代
+            setScreenState?.((prevState) => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = `Ans = ${prevFinalValue}`
+                return {
+                    ...prevState,
 
-                        hasAnswer: false,
-                        calculatorArray: [inputString],
-                        displayArray: [displayString],
-                    }
-                })
-
-                return
-            }
-
-            if (hasAnswer) {
-                // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
-                setScreenState?.((prevState) => {
-                    const prevFinalValue = prevState.finalValue
-                    const displayString = `Ans = ${prevFinalValue}`
-
-                    return {
-                        ...prevState,
-
-                        hasAnswer: false,
-                        calculatorArray: [inputString],
-                        displayArray: [displayString],
-                    }
-                })
-
-                return
-            }
-            // 十進位
-            const returnTotal = decimalControl({
-                inputString,
-                lastCalcString,
+                    hasAnswer: false,
+                    calculatorArray: [inputString],
+                    displayArray: [displayString],
+                }
             })
+
+            return
+        }
+
+        if (hasAnswer) {
+            // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
+            setScreenState?.((prevState) => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = `Ans = ${prevFinalValue}`
+
+                return {
+                    ...prevState,
+
+                    hasAnswer: false,
+                    calculatorArray: [inputString],
+                    displayArray: [displayString],
+                }
+            })
+
+            return
+        }
+        // 十進位
+        const returnTotal = decimalControl({
+            inputString,
+            lastCalcString,
+        })
+        setScreenState?.((prevState) => {
+            const state = prevState.calculatorArray
+            state.pop()
+            return {
+                ...prevState,
+
+                calculatorArray: [...state, returnTotal],
+            }
+        })
+    }
+
+    const handleCalcMarkClick = (e) => {
+        const inputMarkString = e?.target?.innerHTML || e
+
+        if (hasAnswer) {
+            // 處理有Ans displayScreen 的顯示
+            setScreenState?.((prevState) => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = `Ans = ${prevFinalValue}`
+                return {
+                    ...prevState,
+                    hasAnswer: false,
+
+                    displayArray: [displayString],
+                    calculatorArray: [
+                        ...prevState.calculatorArray,
+                        inputMarkString,
+                    ],
+                }
+            })
+            return
+        }
+
+        // 處理 是否需要換 運算符號
+        const markRelation = calcMarkControl({
+            inputMarkString,
+            calcArrayLastWord,
+            calculatorArray,
+        })
+
+        if (markRelation === 'noChange') {
+            return
+        }
+
+        if (markRelation === 'change') {
             setScreenState?.((prevState) => {
                 const state = prevState.calculatorArray
                 state.pop()
                 return {
                     ...prevState,
+                    hasAnswer: false,
 
-                    calculatorArray: [...state, returnTotal],
+                    calculatorArray: [...state, inputMarkString],
                 }
             })
-        },
-        [calculatorArray, hasAnswer, lastCalcString, setScreenState]
-    )
+            return
+        }
 
-    const handleCalcMarkClick = useCallback(
-        (e) => {
-            const inputMarkString = e?.target?.innerHTML || e
+        setScreenState?.((prevState) => ({
+            ...prevState,
+            calculatorArray: [...prevState.calculatorArray, inputMarkString],
+        }))
+    }
 
-            if (hasAnswer) {
-                // 處理有Ans displayScreen 的顯示
-                setScreenState?.((prevState) => {
-                    const prevFinalValue = prevState.finalValue
-                    const displayString = `Ans = ${prevFinalValue}`
-                    return {
-                        ...prevState,
-                        hasAnswer: false,
+    const handleSubtractClick = (e) => {
+        const subtractString = e?.target?.innerHTML || e
+        const markRelation = calcMarkControl({
+            inputMarkString: subtractString,
+            calcArrayLastWord,
+            calculatorArray,
+        })
 
-                        displayArray: [displayString],
-                        calculatorArray: [
-                            ...prevState.calculatorArray,
-                            inputMarkString,
-                        ],
-                    }
-                })
-                return
-            }
+        if (markRelation === 'noChange') return
 
-            // 處理 是否需要換 運算符號
-            const markRelation = calcMarkControl({
-                inputMarkString,
-                calcArrayLastWord,
-                calculatorArray,
+        if (markRelation === 'change') {
+            setScreenState?.((prevState) => {
+                const state = prevState.calculatorArray
+                state.pop()
+                return {
+                    ...prevState,
+                    hasAnswer: false,
+                    calculatorArray: [...state, subtractString],
+                }
             })
+            return
+        }
 
-            if (markRelation === 'noChange') {
-                return
-            }
-
-            if (markRelation === 'change') {
-                setScreenState?.((prevState) => {
-                    const state = prevState.calculatorArray
-                    state.pop()
-                    return {
-                        ...prevState,
-                        hasAnswer: false,
-
-                        calculatorArray: [...state, inputMarkString],
-                    }
-                })
-                return
-            }
-
-            setScreenState?.((prevState) => ({
-                ...prevState,
-                calculatorArray: [
-                    ...prevState.calculatorArray,
-                    inputMarkString,
-                ],
-            }))
-        },
-        [calcArrayLastWord, calculatorArray, hasAnswer, setScreenState]
-    )
-
-    const handleSubtractClick = useCallback(
-        (e) => {
-            const subtractString = e?.target?.innerHTML || e
-            const markRelation = calcMarkControl({
-                inputMarkString: subtractString,
-                calcArrayLastWord,
-                calculatorArray,
+        if (hasAnswer) {
+            setScreenState?.((prevState) => {
+                const prevFinalValue = prevState.finalValue
+                const displayString = `Ans = ${prevFinalValue}`
+                return {
+                    ...prevState,
+                    hasAnswer: false,
+                    displayArray: [displayString],
+                    calculatorArray: [
+                        ...prevState.calculatorArray,
+                        subtractString,
+                    ],
+                }
             })
+            return
+        }
 
-            if (markRelation === 'noChange') return
+        setScreenState?.((prevState) => ({
+            ...prevState,
+            calculatorArray: [...prevState.calculatorArray, subtractString],
+        }))
+    }
 
-            if (markRelation === 'change') {
-                setScreenState?.((prevState) => {
-                    const state = prevState.calculatorArray
-                    state.pop()
-                    return {
-                        ...prevState,
-                        hasAnswer: false,
-                        calculatorArray: [...state, subtractString],
-                    }
-                })
-                return
-            }
-
-            if (hasAnswer) {
-                setScreenState?.((prevState) => {
-                    const prevFinalValue = prevState.finalValue
-                    const displayString = `Ans = ${prevFinalValue}`
-                    return {
-                        ...prevState,
-                        hasAnswer: false,
-                        displayArray: [displayString],
-                        calculatorArray: [
-                            ...prevState.calculatorArray,
-                            subtractString,
-                        ],
-                    }
-                })
-                return
-            }
-
-            setScreenState?.((prevState) => ({
-                ...prevState,
-                calculatorArray: [...prevState.calculatorArray, subtractString],
-            }))
-        },
-        [calcArrayLastWord, calculatorArray, hasAnswer, setScreenState]
-    )
-
-    const handleEqualClick = useCallback(() => {
+    const handleEqualClick = () => {
         const controlCalcArray = [...calculatorArray]
         const isCompleteFormula = handleFormula(controlCalcArray) // 算是是否完成
         if (!isCompleteFormula) return
@@ -419,7 +406,7 @@ export default function KeyBoard({
             calculatorArray: [answerString],
             displayArray: [`${displayString} = `],
         }))
-    }, [calculatorArray, setScreenState])
+    }
 
     const handleACClick = () => {
         if (hasAnswer) {
@@ -445,7 +432,7 @@ export default function KeyBoard({
         }))
     }
 
-    const handleBackSpaceClick = useCallback(() => {
+    const handleBackSpaceClick = () => {
         if (hasAnswer) {
             return setScreenState?.((prevState) => {
                 const calcArray = [...calculatorArray]
@@ -522,22 +509,20 @@ export default function KeyBoard({
             }
             return prevState
         })
-    }, [calculatorArray, hasAnswer, setScreenState])
+    }
 
     useEffect(() => {
         const key = keyBoardKey.newKey
 
         if (key === undefined) return
 
-        // eslint-disable-next-line no-useless-escape
-        if (/[0-9\.]/.test(key)) {
+        if (/[0-9.]/.test(key)) {
             handleNumberClick(key)
             setAnimationState(true)
             return
         }
 
-        // eslint-disable-next-line no-useless-escape
-        if (/[\+\*\/+]/.test(key)) {
+        if (/[+*/+]/.test(key)) {
             setAnimationState(true)
             if (/\*/.test(key)) {
                 handleCalcMarkClick('×')
@@ -551,15 +536,13 @@ export default function KeyBoard({
             return
         }
 
-        // eslint-disable-next-line no-useless-escape
-        if (/\-/.test(key)) {
+        if (/-/.test(key)) {
             setAnimationState(true)
             handleSubtractClick('-')
             return
         }
 
-        // eslint-disable-next-line no-useless-escape
-        if (/\=/.test(key)) {
+        if (/=/.test(key)) {
             setEqualAnimationState(true)
             handleEqualClick()
             return
@@ -569,16 +552,7 @@ export default function KeyBoard({
             setAnimationState(true)
             handleBackSpaceClick()
         }
-    }, [
-        keyBoardKey,
-        handleBackSpaceClick,
-        handleCalcMarkClick,
-        handleEqualClick,
-        handleNumberClick,
-        handleSubtractClick,
-        setAnimationState,
-        setEqualAnimationState,
-    ])
+    }, [keyBoardKey])
 
     return (
         <WKeyBoard>

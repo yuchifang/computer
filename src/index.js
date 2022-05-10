@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
 ReactDOM.render(
   <>
     <App />
-    <GlobalStyle />{" "}
+    <GlobalStyle />
   </>,
   document.getElementById("root")
 );

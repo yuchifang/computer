@@ -1,7 +1,8 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App.jsx";
-import { createGlobalStyle } from "styled-components";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createGlobalStyle } from 'styled-components';
+import App from './App';
+
 const GlobalStyle = createGlobalStyle`
     *{
         padding:0;
@@ -15,5 +16,5 @@ ReactDOM.render(
     <App />
     <GlobalStyle />
   </>,
-  document.getElementById("root")
+  document.getElementById('root'),
 );

@@ -1,6 +1,6 @@
 const calcMarkRegExp = new RegExp(/\÷|\×|\+|\-/);
 export function hasPoint(string: string): boolean {
-  return string.indexOf(".") > -1;
+  return string.indexOf('.') > -1;
 }
 
 export function decimalControl({
@@ -10,12 +10,12 @@ export function decimalControl({
   inputString: string;
   lastCalcString: string;
 }): string {
-  if (inputString === "." && hasPoint(lastCalcString)) {
+  if (inputString === '.' && hasPoint(lastCalcString)) {
     return lastCalcString;
   }
 
-  if (inputString === "00") {
-    return lastCalcString + "00";
+  if (inputString === '00') {
+    return `${lastCalcString}00`;
   }
 
   return lastCalcString + inputString;
@@ -30,33 +30,31 @@ export function calcMarkControl({
   calcArrayLastWord: string;
   calculatorArray: string[];
 }): string {
-  if (/\÷|\×/.test(calcArrayLastWord) && inputMarkString === "-")
-    return "normal";
+  if (/\÷|\×/.test(calcArrayLastWord) && inputMarkString === '-') { return 'normal'; }
   // 特別判斷負號 //3*-3
   if (calcArrayLastWord === inputMarkString) {
-    return "noChange";
+    return 'noChange';
   }
 
   if (calcMarkRegExp.test(calcArrayLastWord)) {
     // 是運算符號
-    return "change";
+    return 'change';
   }
 
-  if (calcArrayLastWord === "-") return "noChange";
+  if (calcArrayLastWord === '-') return 'noChange';
 
   if (
-    calcMarkRegExp.test(inputMarkString) &&
-    calculatorArray.length === 1 &&
-    calcArrayLastWord === "." &&
-    calculatorArray[0].length === 1
-  )
-    return "noChange";
-  //.+3 = error
-  return "normal";
+    calcMarkRegExp.test(inputMarkString)
+    && calculatorArray.length === 1
+    && calcArrayLastWord === '.'
+    && calculatorArray[0].length === 1
+  ) { return 'noChange'; }
+  // .+3 = error
+  return 'normal';
 }
 
 export function handleNormalCalc(calculatorArray: string[]): string {
-  let Arraylength = calculatorArray.length;
+  const Arraylength = calculatorArray.length;
   let index = 0;
   let totalNumber = 0;
   while (Arraylength > index) {
@@ -65,16 +63,16 @@ export function handleNormalCalc(calculatorArray: string[]): string {
     // 判斷陣列字串第一個字為什麼符號
     const switchType = calculatorArray[index][0];
     switch (switchType) {
-      case "+":
+      case '+':
         totalNumber += calcTarget;
         break;
-      case "-":
+      case '-':
         totalNumber += calcTarget;
         break;
       default: // no operation symbol
         totalNumber += calcTarget;
     }
-    index++;
+    index += 1;
   }
   return String(parseFloat(totalNumber.toPrecision(12)));
 }
@@ -88,66 +86,70 @@ function handleMultiplyCalc({
 }) {
   const prevNumber = Number(controlCalcArray[index - 1]);
   const [_, ...arrayOfTarget] = controlCalcArray[index];
+  const returnControlCalcArray = controlCalcArray;
 
   if (controlCalcArray[index].length > 1) {
     // 處理 [2,x2,x3]
-    controlCalcArray[index - 1] = undefined;
-    controlCalcArray[index] = `${prevNumber * Number(arrayOfTarget.join(""))}`;
+    returnControlCalcArray[index - 1] = undefined;
+    returnControlCalcArray[index] = `${prevNumber * Number(arrayOfTarget.join(''))}`;
 
-    return controlCalcArray;
+    return returnControlCalcArray;
   }
 
   // 處理 [2,x2,x3]
-  let nextTarget = Number(controlCalcArray[index + 1]);
-  controlCalcArray[index - 1] = undefined;
-  controlCalcArray[index] = undefined;
-  controlCalcArray[index + 1] = `${prevNumber * nextTarget}`;
+  const nextTarget = Number(controlCalcArray[index + 1]);
+  returnControlCalcArray[index - 1] = undefined;
+  returnControlCalcArray[index] = undefined;
+  returnControlCalcArray[index + 1] = `${prevNumber * nextTarget}`;
 
-  return controlCalcArray;
+  return returnControlCalcArray;
 }
 
 function handleDivideCalc({ controlCalcArray, index }) {
   const prevNumber = Number(controlCalcArray[index - 1]);
   const [_, ...calcTargetString] = controlCalcArray[index];
+  const returncontrolCalcArray = controlCalcArray;
 
   if (controlCalcArray[index].length > 1) {
     // 處理 [2,/2,/3]
-    controlCalcArray[index - 1] = undefined;
-    controlCalcArray[index] = `${
-      prevNumber / Number(calcTargetString.join(""))
+    returncontrolCalcArray[index - 1] = undefined;
+    returncontrolCalcArray[index] = `${
+      prevNumber / Number(calcTargetString.join(''))
     }`;
-    return controlCalcArray;
+    return returncontrolCalcArray;
   }
   // 處理 [2,/,-2,x3]
-  let nextTarget = Number(controlCalcArray[index + 1]);
-  controlCalcArray[index - 1] = undefined;
-  controlCalcArray[index] = undefined;
-  controlCalcArray[index + 1] = `${prevNumber / nextTarget}`;
-  return controlCalcArray;
+  const nextTarget = Number(controlCalcArray[index + 1]);
+  returncontrolCalcArray[index - 1] = undefined;
+  returncontrolCalcArray[index] = undefined;
+  returncontrolCalcArray[index + 1] = `${prevNumber / nextTarget}`;
+  return returncontrolCalcArray;
 }
 
 export function handlePriorityCalc(controlCalcArray: string[]): string[] {
-  if (!/(\÷|\×)/g.test(controlCalcArray.join(""))) return controlCalcArray;
+  if (!/(\÷|\×)/g.test(controlCalcArray.join(''))) return controlCalcArray;
 
-  //如果有* 或 / 就執行下面的邏輯
-  let Arraylength = controlCalcArray.length;
+  // 如果有* 或 / 就執行下面的邏輯
+  const Arraylength = controlCalcArray.length;
   let index = 0;
+  let returnControlCalcArray: string [] = controlCalcArray;
 
   while (Arraylength > index) {
     const switchType = controlCalcArray[index]?.[0]; // 判斷陣列字串第一個字為什麼符號
 
     switch (switchType) {
-      case "×":
-        controlCalcArray = handleMultiplyCalc({ controlCalcArray, index });
+      case '×':
+        returnControlCalcArray = handleMultiplyCalc({ controlCalcArray, index });
         break;
-      case "÷":
-        controlCalcArray = handleDivideCalc({ controlCalcArray, index });
+      case '÷':
+        returnControlCalcArray = handleDivideCalc({ controlCalcArray, index });
         break;
       default: // no calc symbol
     }
-    index++;
+    index += 1;
   }
-  return controlCalcArray.filter((item) => item !== undefined);
+
+  return returnControlCalcArray.filter((item) => item !== undefined);
 }
 
 export function handleFormula(controlCalcArray: string[]): boolean {
@@ -158,12 +160,11 @@ export function handleFormula(controlCalcArray: string[]): boolean {
   const lastStringLength = lastString.length;
 
   if (calcMarkRegExp.test(lastWord)) return false;
-  if (lastWord === "." && calcMarkRegExp.test(LastSecondWord)) return false;
+  if (lastWord === '.' && calcMarkRegExp.test(LastSecondWord)) return false;
   if (
-    lastWord === "." &&
-    controlCalcArrayLength === 1 &&
-    lastStringLength === 1
-  )
-    return false;
+    lastWord === '.'
+    && controlCalcArrayLength === 1
+    && lastStringLength === 1
+  ) { return false; }
   return true;
 }

@@ -240,7 +240,7 @@ export default function KeyBoard({
     const handleNumberClick = (e) => {
         const inputString = e?.target?.innerHTML || e
 
-        if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(''))) {
+        if (!/[1-9.\-+÷×]/.test(calculatorArray.join(''))) {
             // 如果全是0 則取代
             setScreenState?.((prevState) => {
                 const prevFinalValue = prevState.finalValue

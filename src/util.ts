@@ -30,7 +30,6 @@ export function calcMarkControl({
     calcArrayLastWord: string
     calculatorArray: string[]
 }): string {
-    
     if (/÷|×/.test(calcArrayLastWord) && inputMarkString === '-') {
         return 'normal'
     }
@@ -90,7 +89,7 @@ function handleMultiplyCalc({
     index: number
 }) {
     const prevNumber = Number(controlCalcArray[index - 1])
-    const [_, ...arrayOfTarget] = controlCalcArray[index]
+    const [, ...arrayOfTarget] = controlCalcArray[index]
     const returnControlCalcArray = controlCalcArray
 
     if (controlCalcArray[index].length > 1) {
@@ -114,7 +113,7 @@ function handleMultiplyCalc({
 
 function handleDivideCalc({ controlCalcArray, index }) {
     const prevNumber = Number(controlCalcArray[index - 1])
-    const [_, ...calcTargetString] = controlCalcArray[index]
+    const [, ...calcTargetString] = controlCalcArray[index]
     const returnControlCalcArray = controlCalcArray
 
     if (controlCalcArray[index].length > 1) {

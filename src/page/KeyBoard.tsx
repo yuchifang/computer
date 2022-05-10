@@ -477,6 +477,7 @@ export default function KeyBoard({
                         lastStringLength - 1
                     )
                     calcArray.push(newString)
+
                     return {
                         ...prevState,
                         hasAnswer: true,

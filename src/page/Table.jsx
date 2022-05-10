@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import KeyBoard from './KeyBoard'
+import KeyBoard from './KeyBoard.tsx'
 import Screen from './Screen.tsx'
 import { useOutSideClick } from '../hooks/hooks'
 
@@ -42,25 +42,18 @@ export default function Table() {
         }
     }
 
-    const renderScreen = useMemo(
-        () => (
-            <Screen
-                animationState={animationState}
-                screenState={screenState}
-                equalAnimationState={equalAnimationState}
-                setEqualAnimationState={setEqualAnimationState}
-            />
-        ),
-        [animationState, equalAnimationState, screenState]
-    )
-
     return (
         <WTableBlock
             ref={insideRef}
             tabIndex={0}
             onKeyDown={handleOnKeyDownIsVaild}
         >
-            {renderScreen}
+            <Screen
+                animationState={animationState}
+                screenState={screenState}
+                equalAnimationState={equalAnimationState}
+                setEqualAnimationState={setEqualAnimationState}
+            />
             <KeyBoard
                 keyBoardKey={keyBoardKey}
                 setScreenState={setScreenState}

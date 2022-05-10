@@ -12,6 +12,6 @@ export function useOutSideClick({ handleOutsideClick }) {
         return () => {
             document.removeEventListener('mousedown', outSideClick)
         }
-    }, [wrapper])
+    }, [handleOutsideClick, wrapper])
     return wrapper
 }

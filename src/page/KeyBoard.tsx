@@ -461,6 +461,7 @@ export default function KeyBoard({
         }
       });
     }
+
     setScreenState?.((prevState) => {
       const calcArray = [...calculatorArray];
       const lastString = calcArray.pop();

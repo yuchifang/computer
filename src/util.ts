@@ -30,6 +30,7 @@ export function calcMarkControl({
   calcArrayLastWord: string;
   calculatorArray: string[];
 }): string {
+  // eslint-disable-next-line no-useless-escape
   if (/\÷|\×/.test(calcArrayLastWord) && inputMarkString === '-') { return 'normal'; }
   // 特別判斷負號 //3*-3
   if (calcArrayLastWord === inputMarkString) {
@@ -127,6 +128,7 @@ function handleDivideCalc({ controlCalcArray, index }) {
 }
 
 export function handlePriorityCalc(controlCalcArray: string[]): string[] {
+  // eslint-disable-next-line no-useless-escape
   if (!/(\÷|\×)/g.test(controlCalcArray.join(''))) return controlCalcArray;
 
   // 如果有* 或 / 就執行下面的邏輯

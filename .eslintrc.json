@@ -22,7 +22,7 @@
     ],
     "rules": {
         // "no-console": "off",
-        // "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never" } ],
+        "import/extensions": ["error", "ignorePackages", { "ts": "never", "tsx": "never", "js":"never", "jsx":"never"} ],
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "error",
         "react/jsx-filename-extension": [

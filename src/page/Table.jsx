@@ -25,8 +25,8 @@ export default function Table() {
         displayArray: [],
     })
 
-    const [equalAnimationState, setEqualAnimationState] = useState(false) // todo
-    const [animationState, setAnimationState] = useState(false) // todo
+    const [equalAnimationState, setEqualAnimationState] = useState(false)
+    const [animationState, setAnimationState] = useState(false)
 
     const insideRef = useOutSideClick({
         handleOutsideClick: () => setAnimationState(false),
@@ -34,10 +34,10 @@ export default function Table() {
 
     const [keyBoardKey, setKeyBoardKey] = useState({ newKey: undefined }) //
 
-    const handleOnKeyDownIsVaild = (e) => {
+    const handleOnKeyDownIsValid = (e) => {
         const newKey = e.key
-        // eslint-disable-next-line no-useless-escape
-        if (/Backspace|[0-9\=\+\/\-\*\.]/.test(newKey)) {
+
+        if (/Backspace|[0-9=+/\-*.]/.test(newKey)) {
             setKeyBoardKey({ newKey })
         }
     }
@@ -46,7 +46,7 @@ export default function Table() {
         <WTableBlock
             ref={insideRef}
             tabIndex={0}
-            onKeyDown={handleOnKeyDownIsVaild}
+            onKeyDown={handleOnKeyDownIsValid}
         >
             <Screen
                 animationState={animationState}

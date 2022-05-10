@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 export function useOutSideClick({ handleOutsideClick }) {
   const wrapper = useRef(null);
@@ -8,9 +8,9 @@ export function useOutSideClick({ handleOutsideClick }) {
         handleOutsideClick?.();
       }
     }
-    document.addEventListener("mousedown", outSideClick);
+    document.addEventListener('mousedown', outSideClick);
     return () => {
-      document.removeEventListener("mousedown", outSideClick);
+      document.removeEventListener('mousedown', outSideClick);
     };
   }, [wrapper]);
   return wrapper;

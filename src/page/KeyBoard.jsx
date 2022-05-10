@@ -1,21 +1,23 @@
-import React, { useRef, useEffect } from "react";
-import styled from "styled-components";
-import color from "../style/style";
-import Button from "../components/Button";
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
+import color from '../style/style';
+import Button from '../components/Button';
 import {
   decimalControl,
   calcMarkControl,
   handleNormalCalc,
   handlePriorityCalc,
   handleFormula,
-} from "../util";
+} from '../util';
 
 export default function KeyBoard({
   keyBoardKey,
   setAnimationState,
   setEqualAnimationState,
   setScreenState,
-  screenState: { calculatorArray, displayArray, finalValue, hasAnswer },
+  screenState: {
+    calculatorArray, displayArray, finalValue, hasAnswer,
+  },
 }) {
   useEffect(() => {
     const key = keyBoardKey.newKey;
@@ -30,15 +32,15 @@ export default function KeyBoard({
 
     if (/[\+\*\/+]/.test(key)) {
       setAnimationState(true);
-      if (/\*/.test(key)) return handleCalcMarkClick("×");
-      if (/\//.test(key)) return handleCalcMarkClick("÷");
-      handleCalcMarkClick("+");
+      if (/\*/.test(key)) return handleCalcMarkClick('×');
+      if (/\//.test(key)) return handleCalcMarkClick('÷');
+      handleCalcMarkClick('+');
       return;
     }
 
     if (/\-/.test(key)) {
       setAnimationState(true);
-      handleSubtractClick("-");
+      handleSubtractClick('-');
       return;
     }
 
@@ -51,7 +53,6 @@ export default function KeyBoard({
     if (/Backspace/.test(key)) {
       setAnimationState(true);
       handleBackSpaceClick();
-      return;
     }
   }, [keyBoardKey]);
 
@@ -61,11 +62,11 @@ export default function KeyBoard({
   const handleNumberClick = (e) => {
     const inputString = e?.target?.innerHTML || e;
 
-    if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(""))) {
+    if (!/[1-9\.\-\+\÷\×]/.test(calculatorArray.join(''))) {
       // 如果全是0 則取代
       setScreenState?.((prevState) => {
         const prevFinalValue = prevState.finalValue;
-        const displayString = "Ans = " + prevFinalValue;
+        const displayString = `Ans = ${prevFinalValue}`;
         return {
           ...prevState,
 
@@ -82,7 +83,7 @@ export default function KeyBoard({
       // 處理是否計算完成的答案值,及初始值 按負號時 calc改為 -
       setScreenState?.((prevState) => {
         const prevFinalValue = prevState.finalValue;
-        const displayString = "Ans = " + prevFinalValue;
+        const displayString = `Ans = ${prevFinalValue}`;
 
         return {
           ...prevState,
@@ -98,7 +99,7 @@ export default function KeyBoard({
     // 十進位
     const returnTotal = decimalControl({ inputString, lastCalcString });
     setScreenState?.((prevState) => {
-      let state = prevState.calculatorArray;
+      const state = prevState.calculatorArray;
       state.pop();
       return {
         ...prevState,
@@ -115,7 +116,7 @@ export default function KeyBoard({
       // 處理有Ans displayScreen 的顯示
       setScreenState?.((prevState) => {
         const prevFinalValue = prevState.finalValue;
-        const displayString = "Ans = " + prevFinalValue;
+        const displayString = `Ans = ${prevFinalValue}`;
         return {
           ...prevState,
           hasAnswer: false,
@@ -136,13 +137,13 @@ export default function KeyBoard({
       calculatorArray,
     });
 
-    if (markRelation === "noChange") {
+    if (markRelation === 'noChange') {
       return;
     }
 
-    if (markRelation === "change") {
+    if (markRelation === 'change') {
       setScreenState?.((prevState) => {
-        let state = prevState.calculatorArray;
+        const state = prevState.calculatorArray;
         state.pop();
         return {
           ...prevState,
@@ -154,12 +155,10 @@ export default function KeyBoard({
       return;
     }
 
-    setScreenState?.((prevState) => {
-      return {
-        ...prevState,
-        calculatorArray: [...prevState.calculatorArray, inputMarkString],
-      };
-    });
+    setScreenState?.((prevState) => ({
+      ...prevState,
+      calculatorArray: [...prevState.calculatorArray, inputMarkString],
+    }));
   };
 
   const handleSubtractClick = (e) => {
@@ -170,11 +169,11 @@ export default function KeyBoard({
       calculatorArray,
     });
 
-    if (markRelation === "noChange") return;
+    if (markRelation === 'noChange') return;
 
-    if (markRelation === "change") {
+    if (markRelation === 'change') {
       setScreenState?.((prevState) => {
-        let state = prevState.calculatorArray;
+        const state = prevState.calculatorArray;
         state.pop();
         return {
           ...prevState,
@@ -188,7 +187,7 @@ export default function KeyBoard({
     if (hasAnswer) {
       setScreenState?.((prevState) => {
         const prevFinalValue = prevState.finalValue;
-        const displayString = "Ans = " + prevFinalValue;
+        const displayString = `Ans = ${prevFinalValue}`;
         return {
           ...prevState,
           hasAnswer: false,
@@ -199,12 +198,10 @@ export default function KeyBoard({
       return;
     }
 
-    setScreenState?.((prevState) => {
-      return {
-        ...prevState,
-        calculatorArray: [...prevState.calculatorArray, subtractString],
-      };
-    });
+    setScreenState?.((prevState) => ({
+      ...prevState,
+      calculatorArray: [...prevState.calculatorArray, subtractString],
+    }));
   };
 
   const handleEqualClick = () => {
@@ -212,31 +209,29 @@ export default function KeyBoard({
     const isCompleteFormula = handleFormula(controlCalcArray); // 算是是否完成
     if (!isCompleteFormula) return;
 
-    const returnArr = handlePriorityCalc(controlCalcArray); //優先處理"*" "/＂
-    const answerString = handleNormalCalc(returnArr); //處理 + -
-    const displayString = calculatorArray.join("").split("").join("");
+    const returnArr = handlePriorityCalc(controlCalcArray); // 優先處理"*" "/＂
+    const answerString = handleNormalCalc(returnArr); // 處理 + -
+    const displayString = calculatorArray.join('').split('').join('');
 
-    setScreenState?.((prevState) => {
-      return {
-        ...prevState,
-        finalValue: answerString,
-        hasAnswer: true,
+    setScreenState?.((prevState) => ({
+      ...prevState,
+      finalValue: answerString,
+      hasAnswer: true,
 
-        calculatorArray: [answerString],
-        displayArray: [`${displayString} = `],
-      };
-    });
+      calculatorArray: [answerString],
+      displayArray: [`${displayString} = `],
+    }));
   };
 
   const handleACClick = () => {
     if (hasAnswer) {
       setScreenState?.((prevState) => {
         const prevFinalValue = prevState.finalValue;
-        const displayString = "Ans = " + prevFinalValue;
+        const displayString = `Ans = ${prevFinalValue}`;
         return {
           ...prevState,
           finalValue: prevState.finalValue,
-          calculatorArray: ["0"],
+          calculatorArray: ['0'],
           hasAnswer: true,
           displayArray: [displayString],
         };
@@ -244,14 +239,12 @@ export default function KeyBoard({
       return;
     }
 
-    setScreenState?.((prevState) => {
-      return {
-        ...prevState,
-        finalValue: prevState.finalValue,
-        hasAnswer: true,
-        calculatorArray: ["0"],
-      };
-    });
+    setScreenState?.((prevState) => ({
+      ...prevState,
+      finalValue: prevState.finalValue,
+      hasAnswer: true,
+      calculatorArray: ['0'],
+    }));
   };
 
   const handleBackSpaceClick = () => {
@@ -267,7 +260,7 @@ export default function KeyBoard({
             ...prevState,
             displayArray: [`Ans = ${prevState.finalValue}`],
             hasAnswer: true,
-            calculatorArray: ["0"],
+            calculatorArray: ['0'],
           };
         }
 
@@ -303,7 +296,7 @@ export default function KeyBoard({
         return {
           ...prevState,
           hasAnswer: true,
-          calculatorArray: ["0"],
+          calculatorArray: ['0'],
         };
       }
 
@@ -458,7 +451,6 @@ export default function KeyBoard({
         onClick={() => {
           setEqualAnimationState(true);
           handleEqualClick();
-          return;
         }}
       >
         =

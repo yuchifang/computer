@@ -460,9 +460,7 @@ export default function KeyBoard({
           };
         }
       });
-      return;
     }
-
     setScreenState?.((prevState) => {
       const calcArray = [...calculatorArray];
       const lastString = calcArray.pop();
@@ -491,6 +489,7 @@ export default function KeyBoard({
           calculatorArray: calcArray,
         };
       }
+      return prevState;
     });
   }, [calculatorArray, hasAnswer, setScreenState]);
 
